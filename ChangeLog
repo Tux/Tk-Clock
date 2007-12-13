@@ -1,0 +1,117 @@
+*** Release 0*22	- Thu 13 Dec 2007 <h.m.brand@xs4all.nl>
+
+    - Tk::Clock is now under git
+    - 
+
+*** Release 0.21	- Fri 09 Nov 2007 <h.m.brand@xs4all.nl>
+
+    - Added tickDiff attribute for width-diff of the ticks
+    - Added handCenter attribute (see examples/station.pl)
+    - Added examples/station.pl (Stations klok)
+    - Added countDown attribute and examples/countdown.pl
+    - Fixed auto-resize for clocks with digital disabled
+    - Tested with Tk-804.027_501+
+
+*** Release 0.20	- Tue 08 Oct 2007 <h.m.brand@xs4all.nl>
+
+    - Added a 7-clocks wide example/world.pl
+    - And fixed the Time Zones in world.pl
+    - Raised requirement to 5.006, as I use our and recent Tk builds
+      require 5.007
+
+*** Release 0.19	- Tue 08 May 2007 <h.m.brand@xs4all.nl>
+
+    - LICENSE entry for MakeMaker only for newer versions
+    - Updated plans/TODO
+    - Updated Copyrights
+    - Moved pod to bottom
+    - Added timeZone support!
+    - Split up tests
+    - Loosened up the dateFormat and timeFormat attributes to
+      allow fixed text. Needs documentation!
+    - Added a test with three clocks side-by-side with different TZ's
+
+*** Release 0.18	- Fri 27 Apr 2007 <h.m.brand@xs4all.nl>
+
+    - Added cover make target
+    - Added auto-resize test. Still depends on user doing the resize
+    - Increased coverage. More coverage is doable, but it'll be a
+      booooring job to wait for the tests to finish
+
+*** Release 0.17	- Thu 16 Nov 2006 <h.m.brand@xs4all.nl>
+
+    - Missed one '.' in the format change (K.Wittrock)
+    - secsColor was missed in config attrib handling
+    - allow both -secsColor and secsColor
+
+*** Release 0.16	- Tue 17 Oct 2006 <h.m.brand@xs4all.nl>
+
+    - Default format for time HH.MM:SS => HH:MM:SS (wish K.Wittrock)
+    - Added digiAlign option. Default: "center" (wish K.Wittrock)
+    - $clock->coords (...) now used for the hands instead of
+      deleting and (re)creating them (suggestion K.Wittrock)
+
+*** Release 0.15	- Sun 18 Sep 2005 <h.m.brand@xs4all.nl>
+
+    - Added Test::Pod
+    - Added Test::Pod::Coverage
+
+*** Release 0.12	- Wed 31 Aug 2005 <h.m.brand@xs4all.nl>
+
+    - 24 Hour clock for Abe
+    - config () now returns the widget, so it's stackable
+
+*** Release 0.11	- Sun 14 Aug 2005 <h.m.brand@xs4all.nl>
+
+    - Resize reconfigured wrong widget
+
+*** Release 0.10	- Thu 11 Aug 2005 <h.m.brand@xs4all.nl>
+
+    - Solved digital clock misplacement when anaScale passed (Abeltje)
+    - Improved resizing
+    - Set geometry of parent if MainWindow
+    - Changed README and updated Copyright
+    - Added a warning for resizing and pack
+    - Changed the tests to use Test::More
+    - config now returns the widgets new geometry
+
+*** Release 0.07	- Mon 03 Apr 2000 <h.m.brand@hccnet.nl>
+
+    - Added 'w' and 'ww' for weeknumbers in dateFormat
+    - Added 'd' and 'dd' for day of the week in timeFormat (for Henry)
+
+*** Release 0.06	- Mon 27 Sep 1999 <h.m.brand@hccnet.nl>
+
+    - Analog clock now scalable (anaScale)
+    - Number of ticks configurable (tickFreq)
+
+*** Release 0.05	- Wed 07 Apr 1999 <merijn@hempseed.com>
+
+    - Updated the README
+    - Implemented ddd, dddd, mmm, mmmm (English only)
+    - Enabled \n in date format. If combined with empty time
+      format, formats like "dddd\nd mmm yyyy" can be used.
+
+*** Release 0.04	- Tue 15 Dec 1998 <merijn@hempseed.com>
+
+    - Changed README according to perlmodlib manpage
+    - Made date formats more Y2K reliable
+      dd-mm-yyy still doesn't fit in the allocated space
+
+*** Release 0.03	- Wed 26 Aug 1998 <merijn@hempseed.com>
+
+    - Analog/Digital part can be disabled.
+
+*** Release 0.02	- Wed 22 Jul 1998 <merijn@hempseed.com>
+
+    - Support date/time formats through config
+
+*** Release 0.01	- Mon 20 Jul 1998 <merijn@hempseed.com>
+
+    - First attempt to get it on the CPAN
+    - Added config ()
+    - minimized update of the text fields
+
+*** Release 0.00	- Tue 09 Jun 1998 <merijn@hempseed.com>
+
+    - First post to Achim, as excerpt from xamen.pl
