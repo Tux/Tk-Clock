@@ -1,7 +1,8 @@
-*** Release 0*22	- Thu 13 Dec 2007 <h.m.brand@xs4all.nl>
+*** Release 0.22	- Wed 02 Jan 2008 <h.m.brand@xs4all.nl>
 
     - Tk::Clock is now under git
-    - 
+    - Upped copyright to 2008
+    - Added complete prereq list to Makefile.PL
 
 *** Release 0.21	- Fri 09 Nov 2007 <h.m.brand@xs4all.nl>
 
