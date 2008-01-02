@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# Copyright PROCURA B.V. (c) 1999-2007 H.Merijn Brand
+# Copyright PROCURA B.V. (c) 1999-2008 H.Merijn Brand
 
 require 5.006;
 
@@ -13,7 +13,12 @@ my %wm = (
     VERSION_FROM  =>   "Clock.pm",
     ABSTRACT_FROM =>   "Clock.pm",
 
-    PREREQ_PM	  => { "Tk"	=> "402.000",
+    PREREQ_PM	  => { "Tk"		=> "402.000",
+		       "Tk::Canvas"	=> 0,
+		       "Tk::Derived"	=> 0,
+		       "Tk::Widget"	=> 0,
+		       "Carp"		=> 0,
+		       "Test::More"	=> 0,
 		       },
 
     dist	  => { COMPRESS	=> "gzip -9f",
