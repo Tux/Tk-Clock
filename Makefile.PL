@@ -38,7 +38,9 @@ sub postamble
     join "\n" =>
 	'cover test_cover:',
 	'	cover -delete',
-	'	HARNESS_PERL_SWITCHES=-MDevel::Cover $(MAKE) test',
-	'	cover',
+	'	cover -test',
+	'',
+	'tgzdist:	$(DISTVNAME).tar.gz',
+	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
 	'';
     } # postamble
