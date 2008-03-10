@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.22";
+our $VERSION = "0.23";
 
 use Carp;
 
@@ -59,7 +59,7 @@ my %def_config = (
     _digSize	=> 26,		# Height
     );
 
-sub month ($$)
+sub _month ($$)
 {
     [[  "1", "01", "Jan", "January"	],
      [  "2", "02", "Feb", "February"	],
@@ -73,9 +73,9 @@ sub month ($$)
      [ "10", "10", "Oct", "October"	],
      [ "11", "11", "Nov", "November"	],
      [ "12", "12", "Dec", "December"	]]->[$_[0]][$_[1]];
-    } # month
+    } # _month
 
-sub wday ($$)
+sub _wday ($$)
 {
     [[ "Sun", "Sunday"		],
      [ "Mon", "Monday"		],
@@ -84,19 +84,19 @@ sub wday ($$)
      [ "Thu", "Thursday"	],
      [ "Fri", "Friday"		],
      [ "Sat", "Saturday"	]]->[$_[0]][$_[1]];
-    } # wday
+    } # _wday
 
-sub min ($$)
+sub _min ($$)
 {
     $_[0] <= $_[1] ? $_[0] : $_[1];
-    } # min
+    } # _min
 
-sub max ($$)
+sub _max ($$)
 {
     $_[0] >= $_[1] ? $_[0] : $_[1];
-    } # max
+    } # _max
 
-sub resize ($)
+sub _resize ($)
 {
     my $clock = shift;
 
@@ -104,8 +104,8 @@ sub resize ($)
     my $data = $clock->privateData;
     my $hght = $data->{useAnalog}  * $data->{_anaSize} +
 	       $data->{useDigital} * $data->{_digSize} + 1;
-    my $wdth = max ($data->{useAnalog}  * $data->{_anaSize},
-		    $data->{useDigital} * 72);
+    my $wdth = _max ($data->{useAnalog}  * $data->{_anaSize},
+		     $data->{useDigital} * 72);
     my $dim  = "${wdth}x${hght}";
     $clock->cget (-height) == $hght &&
      $clock->cget (-width) == $wdth and return $dim;
@@ -121,7 +121,7 @@ sub resize ($)
 	-height => $hght,
 	-width  => $wdth);
     $dim;
-    } # resize
+    } # _resize
 
 # Callback when auto-resize is called
 sub _resize_auto ($)
@@ -135,28 +135,28 @@ sub _resize_auto ($)
     my $owdth = $data->{useAnalog} * $data->{_anaSize};
     my ($gw, $gh) = split m/\D/, $geo;
     $data->{useDigital}   and $gh -= $data->{_digSize};
-    my $nwdth = min ($gw, $gh - 1);
+    my $nwdth = _min ($gw, $gh - 1);
     abs ($nwdth - $owdth) > 5 && $nwdth >= 10 or return;
 
     $data->{_anaSize} = $nwdth - 2;
-    $clock->destroyAnalog;
-    $clock->createAnalog;
+    $clock->_destroyAnalog;
+    $clock->_createAnalog;
     if ($data->{useDigital}) {
 	# Otherwise the digital either overlaps the analog
 	# or there is a gap
-	$clock->destroyDigital;
-	$clock->createDigital;
+	$clock->_destroyDigital;
+	$clock->_createDigital;
 	}
-    $clock->resize;
+    $clock->_resize;
     } # _resize_auto
 
-sub createDigital ($)
+sub _createDigital ($)
 {
     my $clock = shift;
 
     my $data = $clock->privateData;
-    my $wdth = max ($data->{useAnalog}  * $data->{_anaSize},
-		    $data->{useDigital} * 72);
+    my $wdth = _max ($data->{useAnalog}  * $data->{_anaSize},
+		     $data->{useDigital} * 72);
     my ($pad, $anchor) = (5, "s");
     my ($x, $y) = ($wdth / 2, $data->{useAnalog} * $data->{_anaSize});
     if    ($data->{digiAlign} eq "left") {
@@ -182,18 +182,18 @@ sub createDigital ($)
 #   $data->{Clock_h} = -1;
 #   $data->{Clock_m} = -1;
 #   $data->{Clock_s} = -1;
-    $clock->resize;
-    } # createDigital
+    $clock->_resize;
+    } # _createDigital
 
-sub destroyDigital ($)
+sub _destroyDigital ($)
 {
     my $clock = shift;
 
     $clock->delete ("date");
     $clock->delete ("time");
-    } # destroyDigital
+    } # _destroyDigital
 
-sub where ($$$$)
+sub _where ($$$$)
 {
     my ($clock, $tick, $len, $anaSize) = @_;      # ticks 0 .. 59
     my ($x, $y, $angle);
@@ -204,9 +204,9 @@ sub where ($$$$)
     $x = $len  * sin ($angle) * $anaSize / 73;
     $y = $len  * cos ($angle) * $anaSize / 73;
     ($h - $x / 4, $h + $y / 4, $h + $x, $h - $y);
-    } # where
+    } # _where
 
-sub createAnalog ($)
+sub _createAnalog ($)
 {
     my $clock = shift;
 
@@ -236,7 +236,7 @@ sub createAnalog ($)
     $data->{Clock_s} = -1;
 
     $clock->createLine (
-	$clock->where (0, 22, $data->{_anaSize}),
+	$clock->_where (0, 22, $data->{_anaSize}),
 	    -tags  => "hour",
 	    -arrow => "none",
 	    -fill  => $data->{handColor},
@@ -252,14 +252,14 @@ sub createAnalog ($)
 	    );
 	}
     $clock->createLine (
-	$clock->where (0, 30, $data->{_anaSize}),
+	$clock->_where (0, 30, $data->{_anaSize}),
 	    -tags  => "min",
 	    -arrow => "none",
 	    -fill  => $data->{handColor},
 	    -width => $data->{_anaSize} / ($data->{handCenter} ? 60 : 30),
 	    );
     $clock->createLine (
-	$clock->where (0, 34, $data->{_anaSize}),
+	$clock->_where (0, 34, $data->{_anaSize}),
 	    -tags  => "sec",
 	    -arrow => "none",
 	    -fill  => $data->{secsColor},
@@ -274,10 +274,10 @@ sub createAnalog ($)
 	    );
 	}
 
-    $clock->resize;
-    } # createAnalog
+    $clock->_resize;
+    } # _createAnalog
 
-sub destroyAnalog ($)
+sub _destroyAnalog ($)
 {
     my $clock = shift;
 
@@ -285,7 +285,7 @@ sub destroyAnalog ($)
     $clock->delete ("hour");
     $clock->delete ("min");
     $clock->delete ("sec");
-    } # destroyAnalog
+    } # _destroyAnalog
 
 sub Populate
 {
@@ -318,11 +318,11 @@ sub Populate
         -takefocus          => [ qw(SELF takefocus          Takefocus          0     ) ],
         );
 
-    $data->{useAnalog}  and $clock->createAnalog;
-    $data->{useDigital} and $clock->createDigital;
-    $clock->resize;
+    $data->{useAnalog}  and $clock->_createAnalog;
+    $data->{useDigital} and $clock->_createDigital;
+    $clock->_resize;
 
-    $clock->repeat (995, ["run" => $clock]);
+    $clock->repeat (995, ["_run" => $clock]);
     } # Populate
 
 sub config ($@)
@@ -385,6 +385,7 @@ sub config ($@)
 		"y"	=> '%d',	# 98
 		"yy"	=> '%02d',	# 98
 		"yyy"	=> '%04d',	# 1998
+		"yyyy"	=> '%04d',	# 1998
 		"w"	=> '%d',	# 28 (week)
 		"ww"	=> '%02d',	# 28
 		);
@@ -399,11 +400,11 @@ sub config ($@)
 		    $fmt .= $fmt{$f};
 		    if ($f =~ m/^m+$/) {
 			my $l = length ($f) - 1;
-			$args .= ", Tk::Clock::month (\$m, $l)";
+			$args .= ", Tk::Clock::_month (\$m, $l)";
 			}
 		    elsif ($f =~ m/^ddd+$/) {
 			my $l = length ($f) - 3;
-			$args .= ", Tk::Clock::wday (\$wd, $l)";
+			$args .= ", Tk::Clock::_wday (\$wd, $l)";
 			}
 		    else {
 			$args .= ', $' . substr ($f, 0, 1);
@@ -448,7 +449,7 @@ sub config ($@)
 	    foreach my $f (@fmt) {
 		if ($f =~ m/^dd{1,3}$/) {
 		    $fmt .= $fmt{$f};
-		    $arg .= ", Tk::Clock::wday (\$d, 1)";
+		    $arg .= ", Tk::Clock::_wday (\$d, 1)";
 		    }
 		elsif (defined $fmt{$f}) {
 		    $fmt .= $fmt{$f};
@@ -472,8 +473,8 @@ sub config ($@)
 #	    $data->{tickFreq} != int $data->{tickFreq} and
 #		$data->{tickFreq} = $old;
 	    unless ($data->{tickFreq} == $old) {
-		$clock->destroyAnalog;
-		$clock->createAnalog;
+		$clock->_destroyAnalog;
+		$clock->_createAnalog;
 		}
 	    }
 	elsif ($attr eq "anaScale") {
@@ -487,53 +488,53 @@ sub config ($@)
 		my $new_size = int ($ana_base * $data->{anaScale} / 100.);
 		unless ($new_size == $data->{_anaSize}) {
 		    $data->{_anaSize} = $new_size;
-		    $clock->destroyAnalog;
-		    $clock->createAnalog;
+		    $clock->_destroyAnalog;
+		    $clock->_createAnalog;
 		    if (exists $conf->{anaScale} && $data->{useDigital}) {
 			# Otherwise the digital either overlaps the analog
 			# or there is a gap
-			$clock->destroyDigital;
-			$clock->createDigital;
+			$clock->_destroyDigital;
+			$clock->_createDigital;
 			}
-		    $clock->after (5, ["run" => $clock]);
+		    $clock->after (5, ["_run" => $clock]);
 		    }
 		}
 	    }
 	elsif ($attr eq "useAnalog") {
 	    if    ($old == 1 && $data->{useAnalog} == 0) {
-		$clock->destroyAnalog;
-		$clock->destroyDigital;
-		$data->{useDigital} and $clock->createDigital;
+		$clock->_destroyAnalog;
+		$clock->_destroyDigital;
+		$data->{useDigital} and $clock->_createDigital;
 		}
 	    elsif ($old == 0 && $data->{useAnalog} == 1) {
-		$clock->destroyDigital;
-		$clock->createAnalog;
-		$data->{useDigital} and $clock->createDigital;
+		$clock->_destroyDigital;
+		$clock->_createAnalog;
+		$data->{useDigital} and $clock->_createDigital;
 		}
-	    $clock->after (5, ["run" => $clock]);
+	    $clock->after (5, ["_run" => $clock]);
 	    }
 	elsif ($attr eq "useDigital") {
 	    if    ($old == 1 && $data->{useDigital} == 0) {
-		$clock->destroyDigital;
+		$clock->_destroyDigital;
 		}
 	    elsif ($old == 0 && $data->{useDigital} == 1) {
-		$clock->createDigital;
+		$clock->_createDigital;
 		}
-	    $clock->after (5, ["run" => $clock]);
+	    $clock->after (5, ["_run" => $clock]);
 	    }
 	elsif ($attr eq "digiAlign") {
 	    if ($data->{useDigital} && $old ne $data->{digiAlign}) {
-		$clock->destroyDigital;
-		$clock->createDigital;
-		$clock->after (5, ["run" => $clock]);
+		$clock->_destroyDigital;
+		$clock->_createDigital;
+		$clock->after (5, ["_run" => $clock]);
 		}
 	    }
 	}
-    $clock->resize;
+    $clock->_resize;
     $clock;
     } # config
 
-sub run ($)
+sub _run ($)
 {
     my $clock = shift;
 
@@ -557,24 +558,24 @@ sub run ($)
 	if ($data->{useAnalog}) {
 	    my ($h24, $m24) = $data->{ana24hour} ? (24, 2.5)  : (12, 5);
 	    $clock->coords ("hour",
-		$clock->where (($data->{Clock_h} % $h24) * $m24 + $t[1] / $h24, 22, $data->{_anaSize}));
+		$clock->_where (($data->{Clock_h} % $h24) * $m24 + $t[1] / $h24, 22, $data->{_anaSize}));
 
 	    $clock->coords ("min",
-		$clock->where ($data->{Clock_m}, 30, $data->{_anaSize}));
+		$clock->_where ($data->{Clock_m}, 30, $data->{_anaSize}));
 	    }
 	}
 
     $data->{Clock_s} = $t[0];
     if ($data->{useAnalog}) {
 	$clock->coords ("sec",
-	    $clock->where ($data->{Clock_s}, 34, $data->{_anaSize}));
+	    $clock->_where ($data->{Clock_s}, 34, $data->{_anaSize}));
 	}
     $data->{useDigital} and
 	$clock->itemconfigure ("time",
 	    -text => &{$data->{fmtt}} (@t[2,1,0,6]));
 
     $data->{anaScale} == 0 and $clock->_resize_auto;
-    } # run
+    } # _run
 
 1;
 
