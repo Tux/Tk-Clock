@@ -1,7 +1,9 @@
-*** Release 0.23	- Wed 02 Jan 2008 <h.m.brand@xs4all.nl>
+*** Release 0*23	- Tue 30 Sep 2008 <h.m.brand@xs4all.nl>
 
     - Added tgzdist make target
     - Slightly changed the cover make target
+    - Allow yyyy in date formats
+    - Add `weird' TimeZones to examples/world.pl
 
 *** Release 0.22	- Wed 02 Jan 2008 <h.m.brand@xs4all.nl>
 

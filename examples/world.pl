@@ -25,14 +25,16 @@ while (<DATA>) {
 
 # my $tz = strftime ("%Z", localtime);
 foreach my $cd (
+	[ "UCT",		"UCT",			"#ff0040"	],
 	[ "Local",		$ENV{TZ}||"",		"Red"		],
 	[ "London",		"Europe/London",	"OrangeRed"	],
 	[ "Amsterdam",		"Europe/Amsterdam",	"Orange"	],
 	[ "Moscow",		"Europe/Moscow",	"Yellow"	],
-#	[ "Calcutta",		"Asia/Calcutta",	"YellowGreen"	],
 	[ "Tokyo",		"Asia/Tokyo",		"YellowGreen"	],
 	[ "Los Angeles",	"America/Los_Angeles",	"Green"		],
 	[ "New York",		"America/New_York",	"Turquoise"	],
+	[ "Darwin",		"Australia/Darwin",	"Blue"		],
+	[ "Catham",		"GMT+13:45",		"Violet"	],
 	) {
     my ($city, $tz, $color) = @$cd;
     if (exists $TZ{$tz}) {
@@ -46,10 +48,10 @@ foreach my $cd (
 	secsColor	=> "Green",
 	tickColor	=> "Blue",
 	tickFreq	=> 1,
-	timeFont	=> "-misc-fixed-medium-r-normal--15-*-75-75-c-*-iso8859-1",
+	timeFont	=> "{Liberation Mono} 12",
 	timeColor	=> "lightBlue",
 	timeFormat	=> "HH:MM:SS",
-	dateFont	=> "-misc-fixed-medium-r-normal--15-*-75-75-c-*-iso8859-1",
+	dateFont	=> "{Liberation Mono} 12",
 	dateColor	=> "Gold",
 
 	dateFormat => $city,
