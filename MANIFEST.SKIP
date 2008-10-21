@@ -5,3 +5,4 @@ Makefile
 MANIFEST.SKIP
 pm_to_blib
 Tk$
+sandbox/
