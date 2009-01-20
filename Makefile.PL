@@ -8,7 +8,7 @@ use strict;
 
 # Be kind to testers, not verbose
 if (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING}) {
-    exists $ENV{DISPLAY} or exit 0;
+    $ENV{DISPLAY} or exit 0;
     }
 
 use ExtUtils::MakeMaker;
