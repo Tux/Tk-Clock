@@ -29,11 +29,11 @@ my %def_config = (
 
     timeZone	=> "",
 
-    timeFont	=> "fixed",
+    timeFont	=> "fixed 6",
     timeColor	=> "Red4",
     timeFormat	=> "HH:MM:SS",
 
-    dateFont	=> "fixed",
+    dateFont	=> "fixed 6",
     dateColor	=> "Blue4",
     dateFormat	=> "dd-mm-yy",
 
