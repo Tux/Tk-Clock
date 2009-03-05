@@ -112,9 +112,9 @@ sub _resize ($)
     my ($pw, $ph) = split m/\D/, $geo; # Cannot use ->cget here
     if ($ph > 5 && $clock->parent->isa ("MainWindow")) {
 	my %pi = $clock->packInfo;
-	my ($px, $py) = ($pi{"-padx"}, $pi{"-pady"});
-	$pw < $wdth + $px and $clock->parent->configure (-width  => $wdth + $px + 4);
-	$ph < $hght + $py and $clock->parent->configure (-height => $hght + $py + 4);
+	my $px = _max ($wdth + $pi{"-padx"} + 4, $pw);
+	my $py = _max ($hght + $pi{"-pady"} + 4, $ph);
+	$clock->parent->geometry ("${px}x$py");
 	}
     $clock->configure (
 	-height => $hght,
