@@ -19,7 +19,8 @@ like ($c->config (
     secsColor => "Green",
     timeColor => "lightBlue",
     dateColor => "Gold",
-    timeFont  => "-misc-fixed-medium-r-normal--13-*-75-75-c-*-iso8859-1",
+    timeFont  => "Helvetica 7",
+    dateFont  => "Helvetica 7",
     ), qr(^Tk::Clock=HASH), "config");
 ok ($c->pack (-expand => 1, -fill => "both"), "pack");
 # Three stupid tests to align the rest
@@ -136,7 +137,7 @@ $delay += $period;
 $c->after ($delay, sub {
     ok ($c->config ({
 	anaScale   => 150,
-	dateFont   => "-misc-fixed-medium-r-normal--14-*-75-75-c-*-iso8859-1",
+	dateFont   => "Helvetica 10",
 	}), "        Increase date font size");
     });
 
