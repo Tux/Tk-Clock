@@ -4,6 +4,7 @@ Makefile.PL
 README
 Clock.pm
 examples/24hour.pl
+examples/cdclock.pl
 examples/countdown.pl
 examples/simple.pl
 examples/station.pl

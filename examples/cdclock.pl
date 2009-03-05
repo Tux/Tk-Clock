@@ -50,7 +50,7 @@ my ($rest, $end, $secs, $left) = ("");
 
 my $l = $f->Label (
     -textvariable	=> \$rest,
-    -font		=> "{Helvetica} 240 bold",
+    -font		=> "{Arial} 240 bold",
     -background		=> "Black",
    )->pack (
     -expand	=> 1,
