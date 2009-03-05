@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 9;
+use Test::More tests => 8;
 
 BEGIN {
     use_ok ("Tk");
@@ -20,13 +20,11 @@ like ($c->config (
     timeColor => "lightBlue",
     dateColor => "Gold",
     timeFont  => "-misc-fixed-medium-r-normal--13-*-75-75-c-*-iso8859-1",
+    autoScale => 1,
     ), qr(^Tk::Clock=HASH), "config");
 ok ($c->pack (-expand => 1, -fill => "both"), "pack");
 
-print STDERR "# Feel free to resize the clock now with your mouse!\n";
-ok ($c->config ({
-    anaScale   => 0,
-    }), "Auto-scaling");
+print "# Feel free to resize the clock now with your mouse!\n";
 
 $c->after ($delay, sub {
     $c->destroy;
