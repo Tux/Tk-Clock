@@ -36,7 +36,7 @@ $c->config (
     tickDiff	=> 1,
     handCenter	=> 1,
     anaScale	=> 500,
+    autoScale	=> 1,
     );
-$c->config (anaScale => 0);
 
 MainLoop;
