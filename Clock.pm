@@ -108,15 +108,13 @@ sub _resize ($)
     my $wdth = _max ($data->{useAnalog}  * $data->{_anaSize},
 		     $data->{useDigital} * 72);
     my $dim  = "${wdth}x${hght}";
-    $clock->cget (-height) == $hght &&
-     $clock->cget (-width) == $wdth and return $dim;
-    if ($clock->parent->isa ("MainWindow")) {
-	my $geo = $clock->parent->geometry;
-	my @geo = split m/\D/ => $geo;
-	if ($geo[0] > 5 && $geo[1] > 5) {
-	    $geo =~ s/^\d+x\d+//;
-	    $clock->parent->geometry ("$dim$geo");
-	    }
+    my $geo   = $clock->parent->geometry;
+    my ($pw, $ph) = split m/\D/, $geo; # Cannot use ->cget here
+    if ($ph > 5 && $clock->parent->isa ("MainWindow")) {
+	my %pi = $clock->packInfo;
+	my ($px, $py) = ($pi{"-padx"}, $pi{"-pady"});
+	$pw < $wdth + $px and $clock->parent->configure (-width  => $wdth + $px + 4);
+	$ph < $hght + $py and $clock->parent->configure (-height => $hght + $py + 4);
 	}
     $clock->configure (
 	-height => $hght,
@@ -132,10 +130,13 @@ sub _resize_auto ($)
 
     $data->{useAnalog} && $data->{autoScale} == 1 or return;
 
-    my $geo   = $clock->geometry;
     my $owdth = $data->{useAnalog} * $data->{_anaSize};
-    my ($gw, $gh) = split m/\D/, $geo;
-    $data->{useDigital}   and $gh -= $data->{_digSize};
+    my $geo   = $clock->geometry;
+    my ($gw, $gh) = split m/\D/, $geo; # Cannot use ->cget here
+    $gw < 5 and return; # not packed yet?
+    my %pi = $clock->packInfo;
+    my ($px, $py) = ($pi{"-padx"}, $pi{"-pady"});
+    $data->{useDigital} and $gh -= $data->{_digSize};
     my $nwdth = _min ($gw, $gh - 1);
     abs ($nwdth - $owdth) > 5 && $nwdth >= 10 or return;
 
