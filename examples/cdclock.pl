@@ -121,13 +121,16 @@ sub start
 {
     my ($val, $x, $prev, $idx, $act) = @_;
     $val eq $prev and return;
-    $val or return;
     #print STDERR "New val: (@_)\n";
-    unless ($val =~ m/^[0-9]+$/ && $val > 0 && $val <= 60) {
+    if ($val !~ m/^[0-9]+$/ || $val <= 0 || $val > 120 or
+	    $val eq "0" && $prev eq "X") {
 	$rest = "";
+	$secs = "";
+	$left = "";
 	$end  = 999999999;
 	return $val;
 	}
+    $val or return;
     $end = time + (60 * $val);
     rest ();
     return $val;
@@ -140,9 +143,9 @@ my $p = $f->Frame (
     -fill	=> "both",
     -side	=> "top",
     );
-foreach my $d (5, 10, 15, 20, 25, 30) {
+foreach my $d (0, 5, 10, 15, 20, 25, 30) {
     $p->Button (
-	-text			=> $d,
+	-text			=> $d || "X",
 	-relief			=> "flat",
 	-borderwidth		=> 1,
 	-activebackground	=> "Gray10",
@@ -151,7 +154,7 @@ foreach my $d (5, 10, 15, 20, 25, 30) {
 	-highlightcolor		=> "Red2",
 	-background		=> "Black",
 	-foreground		=> "Red2",
-	-command		=> sub { start ($d, 0, "", 0, 0) },
+	-command		=> sub { start ($d, 0, "X", 0, 0) },
        )->pack (
 	-expand	=> 1,
 	-fill	=> "both",

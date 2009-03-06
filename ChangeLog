@@ -1,7 +1,8 @@
-*** Release 0.25	- Thu 05 Mar 2009 <h.m.brand@xs4all.nl>
+*** Release 0.25	- Fri 06 Mar 2009 <h.m.brand@xs4all.nl>
 
     - Vastly improved on resizing.
     - Prefer autoScale => 1 over anaScale => 0
+    - Add examples/cdclock.pl (Lightning Talk countdown clock)
 
 *** Release 0.24	- Tue 20 Jan 2009 <h.m.brand@xs4all.nl>
 
