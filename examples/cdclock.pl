@@ -21,8 +21,8 @@ my $c = $m->Clock (
    )->pack (
     -expand	=> 1,
     -fill	=> "both",
-    -padx	=> "30",
-    -pady	=> "30",
+    -padx	=> 30,
+    -pady	=> 30,
     -side	=> "left",
     );
 $c->config (
@@ -35,60 +35,23 @@ $c->config (
     tickDiff	=> 1,
     handCenter	=> 1,
     anaScale	=> 800,
-    );
-$c->config (anaScale => 0);
-
-my $f = $m->Frame (
-    -background	=> "Black",
-   )->pack (
-    -expand	=> 1,
-    -fill	=> "both",
-    -side	=> "left",
+    autoScale	=> 1,
     );
 
-my ($rest, $end, $secs, $left) = ("");
-
-my $l = $f->Label (
-    -textvariable	=> \$rest,
-    -font		=> "{Arial} 240 bold",
-    -background		=> "Black",
-   )->pack (
-    -expand	=> 1,
-    -padx	=> 30,
-    -pady	=> 30,
-    -fill	=> "both",
-    -side	=> "top",
-    );
-my $r = $f->Frame (
-    -background	=> "Black",
-   )->pack (
-    -expand	=> 1,
-    -fill	=> "both",
-    -side	=> "top",
-    );
-$r->Label (
-    -textvariable	=> \$secs,
-    -width		=> 30,
-    -background		=> "Black",
-    -foreground		=> "Yellow",
-   )->pack (
-    -fill	=> "both",
-    -side	=> "left",
-    );
-$r->Label (
-    -textvariable	=> \$left,
-    -width		=> 30,
-    -background		=> "Black",
-    -foreground		=> "Yellow",
-   )->pack (
-    -fill	=> "both",
-    -side	=> "left",
-    );
+my ($l, $rest, $end, $secs, $left) = ("");
 
 sub rest
 {
     use integer;
     my $now = time;
+
+    unless (defined $end) {
+	$rest = "";
+	$secs = "";
+	$left = "";
+	$end  = undef;
+	return;
+	}
 
     $now > $end and return;
 
@@ -115,61 +78,98 @@ sub rest
     $l->configure (-background	=> "Red");
     $l->after (30000, sub { $l->configure (-background => "Black") });
     $rest = "";
+    $end  = undef;
     } # rest
 
 sub start
 {
-    my ($val, $x, $prev, $idx, $act) = @_;
-    $val eq $prev and return;
-    #print STDERR "New val: (@_)\n";
-    if ($val !~ m/^[0-9]+$/ || $val <= 0 || $val > 120 or
-	    $val eq "0" && $prev eq "X") {
-	$rest = "";
-	$secs = "";
-	$left = "";
-	$end  = 999999999;
-	return $val;
-	}
-    $val or return;
+    my $val = shift;
     $end = time + (60 * $val);
     rest ();
-    return $val;
     } # start
 
-my $p = $f->Frame (
-    -background	=> "Black",
-   )->pack (
+my $f = $m->Frame (-background => "Black")->pack (
     -expand	=> 1,
+    -padx	=> 30,
+    -pady	=> 30,
     -fill	=> "both",
-    -side	=> "top",
+    -side	=> "left",
     );
-foreach my $d (0, 5, 10, 15, 20, 25, 30) {
-    $p->Button (
-	-text			=> $d || "X",
-	-relief			=> "flat",
-	-borderwidth		=> 1,
-	-activebackground	=> "Gray10",
-	-activeforeground	=> "Red2",
-	-highlightthickness	=> 1,
-	-highlightcolor		=> "Red2",
-	-background		=> "Black",
-	-foreground		=> "Red2",
-	-command		=> sub { start ($d, 0, "X", 0, 0) },
-       )->pack (
-	-expand	=> 1,
-	-fill	=> "both",
-	-side	=> "left",
-	);
+
+$l = $f->Label (
+    -textvariable	=> \$rest,
+    -font		=> "{Arial} 240 bold",
+    -background		=> "Black",
+    )->pack (-expand => 1, -side => "top", -fill => "both", -anchor => "c");
+
+my $g    = $f->Frame (-background => "Black")->pack (
+    -side => "bottom", -anchor => "se");
+my $ctrl = $g->Frame (-background => "Black")->pack (
+    -side => "bottom", -anchor => "se");
+my $smll = $g->Frame (-background => "Black")->pack (
+    -side => "top", -anchor => "s", -fill => "x");
+
+$smll->Label (
+    -textvariable	=> \$secs,
+    -background		=> "Black",
+    -foreground		=> "Yellow",
+    -anchor		=> "sw",
+    )->pack (-side => "left",  -anchor => "w");
+$smll->Label (
+    -textvariable	=> \$left,
+    -background		=> "Black",
+    -foreground		=> "Yellow",
+    -anchor		=> "se",
+    )->pack (-side => "right", -anchor => "e");
+
+my %bo = (
+    -borderwidth	=> 1,
+    -highlightthickness	=> 1,
+    -relief		=> "flat",
+    -activebackground	=> "Gray10",
+    -activeforeground	=> "Red2",
+    -highlightcolor	=> "Red2",
+    -background		=> "Black",
+    -foreground		=> "Red2",
+    );
+for (1 .. 6) {
+    my $d = 5 * $_;
+    $ctrl->Button (%bo,
+	-text		=> $d,
+	-font	=> "fixed",
+	-command	=> sub { start ($d) },
+	)->grid (-row => 0, -column => $_ - 1, -sticky => "news");
     }
 
-$f->Entry (
-    -validate	=> "all",
-    -vcmd	=> \&start,
-   )->pack (
-    -fill	=> "both",
-    -side	=> "top",
-   )->bind (
-    Enter	=> \&start,
-    );
+$ctrl->Button (%bo,
+    -text	=> " 0",
+    -font	=> "fixed",
+    -command	=> sub { $end = undef; rest (); },
+    )->grid (-row => 1, -column => 0, -sticky => "news");
+$ctrl->Button (%bo,
+    -text	=> "-1",
+    -font	=> "fixed",
+    -command	=> sub { defined $end and $end -= 60; },
+    )->grid (-row => 1, -column => 1, -sticky => "news");
+$ctrl->Button (%bo,
+    -text	=> "-\x{00bd}",
+    -font	=> "fixed",
+    -command	=> sub { defined $end and $end -= 30; },
+    )->grid (-row => 1, -column => 2, -sticky => "news");
+$ctrl->Button (%bo,
+    -text	=> "+\x{00bd}",
+    -font	=> "fixed",
+    -command	=> sub { defined $end and $end += 30; },
+    )->grid (-row => 1, -column => 3, -sticky => "news");
+$ctrl->Button (%bo,
+    -text	=> "+1",
+    -font	=> "fixed",
+    -command	=> sub { defined $end and $end += 60; },
+    )->grid (-row => 1, -column => 4, -sticky => "news");
+$ctrl->Button (%bo,
+    -text	=> "XX",
+    -font	=> "fixed",
+    -command	=> sub { exit; },
+    )->grid (-row => 1, -column => 5, -sticky => "news");
 
 MainLoop;
