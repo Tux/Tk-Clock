@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.25";
+our $VERSION = "0.26";
 
 use Carp;
 
@@ -58,7 +58,6 @@ my %def_config = (
 
     _anaSize	=> $ana_base,	# Default size (height & width)
     _digSize	=> 26,		# Height
-    _packMethod	=> undef,	# what geometry manager is used
     );
 
 sub _month ($$)
@@ -98,35 +97,13 @@ sub _max ($$)
     $_[0] >= $_[1] ? $_[0] : $_[1];
     } # _max
 
-sub _packMethod ($)
-{
-    my $clock = shift;
-    my $data = $clock->privateData;
-
-    $data->{_packMethod} and return $data->{_packMethod};
-
-    no warnings;
-
-    eval { $clock->packInfo };
-    $@ or return $data->{_packMethod} = "pack";
-
-    eval { $clock->gridInfo };
-    $@ or return $data->{_packMethod} = "grid";
-
-    eval { $clock->formInfo };
-    $@ or return $data->{_packMethod} = "form";
-
-    eval { $clock->placeInfo };
-    $@ or return $data->{_packMethod} = "place";
-    } # _packMethod
-
 # Transparent packInfo for pack/grid/place/form
 sub _packinfo ($)
 {
     my $clock = shift;
 
     my %pi = map { ("-$_" => 0) } qw( padx pady ipadx ipady );
-    if (my $pm = $clock->_packMethod) {
+    if (my $pm = $clock->manager) {
 	   if ($pm eq "pack") {
 	    %pi = $clock->packInfo;
 	    }

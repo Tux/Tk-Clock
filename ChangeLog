@@ -1,3 +1,7 @@
+*** Release 0.26	- Sun 08 Mar 2009 <h.m.brand@xs4all.nl>
+
+    - replace ->_packMethod () with ->manager
+
 *** Release 0.25	- Sun 08 Mar 2009 <h.m.brand@xs4all.nl>
 
     - Vastly improved on resizing.
