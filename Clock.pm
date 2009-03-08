@@ -58,6 +58,7 @@ my %def_config = (
 
     _anaSize	=> $ana_base,	# Default size (height & width)
     _digSize	=> 26,		# Height
+    _packMethod	=> undef,	# what geometry manager is used
     );
 
 sub _month ($$)
@@ -97,6 +98,57 @@ sub _max ($$)
     $_[0] >= $_[1] ? $_[0] : $_[1];
     } # _max
 
+sub _packMethod ($)
+{
+    my $clock = shift;
+    my $data = $clock->privateData;
+
+    $data->{_packMethod} and return $data->{_packMethod};
+
+    no warnings;
+
+    eval { $clock->packInfo };
+    $@ or return $data->{_packMethod} = "pack";
+
+    eval { $clock->gridInfo };
+    $@ or return $data->{_packMethod} = "grid";
+
+    eval { $clock->formInfo };
+    $@ or return $data->{_packMethod} = "form";
+
+    eval { $clock->placeInfo };
+    $@ or return $data->{_packMethod} = "place";
+    } # _packMethod
+
+# Transparent packInfo for pack/grid/place/form
+sub _packinfo ($)
+{
+    my $clock = shift;
+
+    my %pi = map { ("-$_" => 0) } qw( padx pady ipadx ipady );
+    if (my $pm = $clock->_packMethod) {
+	   if ($pm eq "pack") {
+	    %pi = $clock->packInfo;
+	    }
+	elsif ($pm eq "grid") {
+	    %pi = $clock->gridInfo;
+	    }
+	elsif ($pm eq "form") {
+	    %pi = $clock->formInfo;
+	    # padx pady padleft padright padtop padbottom
+	    $pi{"-ipadx"} = int (((delete $pi{"-padleft"}) + (delete $pi{"-padright"} )) / 2);
+	    $pi{"-ipady"} = int (((delete $pi{"-padtop"} ) + (delete $pi{"-padbottom"})) / 2);
+	    }
+	elsif ($pm eq "place") {
+	    # No action, place has no padding
+	    }
+	else {
+	    # No action, unknown geometry manager
+	    }
+	}
+    %pi;
+    } # _packinfo
+
 sub _resize ($)
 {
     my $clock = shift;
@@ -111,7 +163,7 @@ sub _resize ($)
     my $geo   = $clock->parent->geometry;
     my ($pw, $ph) = split m/\D/, $geo; # Cannot use ->cget here
     if ($ph > 5 && $clock->parent->isa ("MainWindow")) {
-	my %pi = $clock->packInfo;
+	my %pi = $clock->_packinfo;
 	my $px = _max ($wdth + $pi{"-padx"}, $pw);
 	my $py = _max ($hght + $pi{"-pady"}, $ph);
 	$clock->parent->geometry ("${px}x$py");
@@ -134,7 +186,7 @@ sub _resize_auto ($)
     my $geo   = $clock->geometry;
     my ($gw, $gh) = split m/\D/, $geo; # Cannot use ->cget here
     $gw < 5 and return; # not packed yet?
-    my %pi = $clock->packInfo;
+    my %pi = $clock->_packinfo;
     my ($px, $py) = ($pi{"-padx"}, $pi{"-pady"});
     $data->{useDigital} and $gh -= $data->{_digSize};
     my $nwdth = _min ($gw, $gh - 1);
