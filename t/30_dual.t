@@ -29,9 +29,7 @@ my %defconfig = (
     dateColor	=> "Gold",
     );
 
-my $grid = $m->Frame ()->grid (-sticky => "nsew");
-#$grid->gridRowconfigure    (0, -weight => 1);
-#$grid->gridColumnconfigure (0, -weight => 1);
+my $grid = $m->Frame ()->grid (-sticky => "news");
 
 ok (my $c1 = $grid->Clock (-background => "Black"),	"Clock Local TimeZone");
 like ($c1->config ((
