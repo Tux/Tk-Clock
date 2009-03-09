@@ -103,11 +103,11 @@ $l = $f->Label (
     )->pack (-expand => 1, -side => "top", -fill => "both", -anchor => "c");
 
 my $g    = $f->Frame (-background => "Black")->pack (
-    -side => "bottom", -anchor => "se");
+    -side => "bottom", -anchor => "se", -fill => "x");
 my $ctrl = $g->Frame (-background => "Black")->pack (
-    -side => "bottom", -anchor => "se");
+    -side => "bottom", -anchor => "se", -fill => "x");
 my $smll = $g->Frame (-background => "Black")->pack (
-    -side => "top", -anchor => "s", -fill => "x");
+    -side => "top",    -anchor => "s",  -fill => "x");
 
 $smll->Label (
     -textvariable	=> \$secs,
@@ -171,5 +171,7 @@ $ctrl->Button (%bo,
     -font	=> "fixed",
     -command	=> sub { exit; },
     )->grid (-row => 1, -column => 5, -sticky => "news");
+
+$ctrl->gridColumnconfigure ($_, -weight => 1) for 0..5;
 
 MainLoop;
