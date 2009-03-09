@@ -11,7 +11,7 @@ BEGIN {
     }
 
 my ($delay, $period, $m, $c) = (0, 5000);
-ok ($m = MainWindow->new (-title => "clock"),	"MainWindow");
+ok ($m = MainWindow->new (-title => "clock", -background => "Black"),	"MainWindow");
 
 my %defconfig = (
     useDigital	=> 1,
@@ -29,9 +29,7 @@ my %defconfig = (
     dateColor	=> "Gold",
     );
 
-my $grid = $m->Frame ()->grid (-sticky => "news");
-
-ok (my $c1 = $grid->Clock (-background => "Black"),	"Clock Local TimeZone");
+ok (my $c1 = $m->Clock (-background => "Black"),	"Clock Local TimeZone");
 like ($c1->config ((
     %defconfig,
     handColor  => "Red",
@@ -47,7 +45,7 @@ like ($c2->config (
     timeZone   => "GMT",
     dateFormat => "London (GMT)",
     ), qr(^Tk::Clock=HASH), "config");
-ok ($c2->grid (-column => 0, -row => 1, -sticky => "news"), "grid");
+ok ($c2->grid (-column => 0, -row => 1, -sticky => "news", -padx => 20), "grid");
 
 ok (my $c3 = $m->Clock (-background => "Black"),	"Clock MET-1METDST");
 like ($c3->config (
@@ -56,7 +54,7 @@ like ($c3->config (
     timeZone   => "MET-1METDST",
     dateFormat => "Amsterdam (MET)",
     ), qr(^Tk::Clock=HASH), "config");
-ok ($c3->grid (-column => 1, -row => 0, -sticky => "news"), "grid");
+ok ($c3->grid (-column => 1, -row => 0, -sticky => "news", -pady => 20), "grid");
 
 ok (my $c4 = $m->Clock (-background => "Black"),	"Clock Tokyo");
 like ($c4->config (
@@ -65,7 +63,12 @@ like ($c4->config (
     timeZone   => "Asia/Tokyo",
     dateFormat => "Asia/Tokyo",
     ), qr(^Tk::Clock=HASH), "config");
-ok ($c4->grid (-column => 1, -row => 1, -sticky => "news"), "grid");
+ok ($c4->grid (-column => 1, -row => 1, -sticky => "news", -padx => 20, -pady => 20), "grid");
+
+for (0..1) {
+    $m->gridColumnconfigure ($_, -weight => 1);
+    $m->gridRowconfigure    ($_, -weight => 1);
+    }
 
 $delay += 5 * $period;
 $c3->after ($delay, sub {
