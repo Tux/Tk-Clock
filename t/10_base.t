@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 24;
+use Test::NoWarnings;
 
 BEGIN {
     use_ok ("Tk");

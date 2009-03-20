@@ -1,8 +1,9 @@
-*** Release 0.26	- Mon 09 Mar 2009 <h.m.brand@xs4all.nl>
+*** Release 0.26	- Fri 20 Mar 2009 <h.m.brand@xs4all.nl>
 
     - replace ->_packMethod () with ->manager
     - t/30_dual.t now allows resizing in grid
     - examples/cdclock.pl now acts as I had in mind
+    - Added Test::NoWarnings
 
 *** Release 0.25	- Sun 08 Mar 2009 <h.m.brand@xs4all.nl>
 

@@ -59,32 +59,33 @@ else {
 
 __END__
 --- #YAML:1.1
-name:              Tk::Clock
-version:           VERSION
-abstract:          Clock widget with analog and digital display
-license:           perl
+name:                 Tk::Clock
+version:              VERSION
+abstract:             Clock widget with analog and digital display
+license:              perl
 author:              
     - H.Merijn Brand <h.m.brand@xs4all.nl>
-generated_by:      Author
-distribution_type: module
+generated_by:         Author
+distribution_type:    module
 provides:
     Tk::Clock:
-        file:      Clock.pm
-        version:   VERSION
+        file:         Clock.pm
+        version:      VERSION
 requires:     
-    perl:          5.006
-    Carp:          0
-    Tk:            0
-    Tk::Widget:    0
-    Tk::Derived:   0
-    Tk::Canvas:    0
+    perl:             5.006
+    Carp:             0
+    Tk:               0
+    Tk::Widget:       0
+    Tk::Derived:      0
+    Tk::Canvas:       0
 build_requires:
-    perl:          5.006
-    Test::Harness: 0
-    Test::More:    0
+    perl:             5.006
+    Test::Harness:    0
+    Test::More:       0
+    Test::NoWarnings: 0
 resources:
-    license:       http://dev.perl.org/licenses/
-    repository:    http://repo.or.cz/w/Tk-Clock.git
+    license:          http://dev.perl.org/licenses/
+    repository:       http://repo.or.cz/w/Tk-Clock.git
 meta-spec:
-    version:       1.4
-    url:           http://module-build.sourceforge.net/META-spec-v1.4.html
+    version:          1.4
+    url:              http://module-build.sourceforge.net/META-spec-v1.4.html
