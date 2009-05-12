@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.26";
+our $VERSION = "0.27";
 
 use Carp;
 
@@ -46,6 +46,8 @@ my %def_config = (
     countDown	=> 0,
 
     digiAlign	=> "center",
+
+    backDrop	=> "",
 
     fmtd	=> sub {
 	my ($d, $m, $y, $w) = @_;
@@ -243,6 +245,13 @@ sub _createAnalog ($)
 
     my $data = $clock->privateData;
 
+    ref $data->{backDrop} eq "Tk::Photo" and
+	$clock->createImage (0, 0,
+	    -anchor => "nw",
+	    -image  => $data->{backDrop},
+	    -tags   => "back",
+	    );
+
     my $h = ($data->{_anaSize} + 1) / 2 - 1;
     my $f = $data->{tickFreq} * 2;
     foreach my $dtick (0 .. 119) {
@@ -312,6 +321,7 @@ sub _destroyAnalog ($)
 {
     my $clock = shift;
 
+    $clock->delete ("back");
     $clock->delete ("tick");
     $clock->delete ("hour");
     $clock->delete ("min");
@@ -661,6 +671,7 @@ $clock->config (	# These reflect the defaults
     dateColor	=> "Blue4",
     dateFormat	=> "dd-mm-yy",
     digiAlign   => "center",
+    backDrop    => "",
     );
 
 =head1 DESCRIPTION
@@ -693,6 +704,8 @@ When using C<pack> for your geometry management, be sure to pass
 C<-expand =&gt; 1, -fill =&gt; "both"> if you plan to resize with
 C<anaScale> or enable/disable either analog or digital after the
 clock was displayed.
+
+The C<backDrop> attribute only works if it is of class Tk::Photo
 
 =head1 BUGS
 

@@ -21,6 +21,7 @@ my $c = $m->Clock (
     -background	=> $bw[1],
     -relief	=> "flat",
   )->pack (
+    -anchor	=> "c",
     -expand	=> 1,
     -fill	=> "both",
     -padx	=> "10",
