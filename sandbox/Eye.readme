@@ -1,0 +1,1 @@
+convert -crop 242x269+226+101 Eye.jpg ../t/eye.png

@@ -21,13 +21,28 @@ Construct Tk::Widget "Clock";
 my $ana_base = 73;	# Size base for 100%
 
 my %def_config = (
+    timeZone	=> "",
+    backDrop	=> "",
+
+    useAnalog	=> 1,
+
     handColor	=> "Green4",
     secsColor	=> "Green2",
     tickColor	=> "Yellow4",
+    tickFreq	=> 1,
     tickDiff	=> 0,
+    useSecHand	=> 1,
     handCenter	=> 0,
 
-    timeZone	=> "",
+    anaScale	=> 100,
+    autoScale	=> 0,
+
+    ana24hour	=> 0,
+    countDown	=> 0,
+
+    useDigital	=> 1,
+
+    digiAlign	=> "center",
 
     timeFont	=> "fixed 6",
     timeColor	=> "Red4",
@@ -36,18 +51,6 @@ my %def_config = (
     dateFont	=> "fixed 6",
     dateColor	=> "Blue4",
     dateFormat	=> "dd-mm-yy",
-
-    useDigital	=> 1,
-    useAnalog	=> 1,
-    autoScale	=> 0,
-    anaScale	=> 100,
-    tickFreq	=> 1,
-    ana24hour	=> 0,
-    countDown	=> 0,
-
-    digiAlign	=> "center",
-
-    backDrop	=> "",
 
     fmtd	=> sub {
 	my ($d, $m, $y, $w) = @_;
@@ -298,20 +301,22 @@ sub _createAnalog ($)
 	    -fill  => $data->{handColor},
 	    -width => $data->{_anaSize} / ($data->{handCenter} ? 60 : 30),
 	    );
-    $clock->createLine (
-	$clock->_where (0, 34, $data->{_anaSize}),
-	    -tags  => "sec",
-	    -arrow => "none",
-	    -fill  => $data->{secsColor},
-	    -width => 0.8);
-    if ($data->{handCenter}) {
-	my $cntr = $data->{_anaSize} /  2;
-	my $diam = $data->{_anaSize} / 35;
-	$clock->createOval (($cntr - $diam) x 2, ($cntr + $diam) x 2,
-	    -tags  => "sec",
-	    -fill  => $data->{secsColor},
-	    -width => 0.
-	    );
+    if ($data->{useSecHand}) {
+	$clock->createLine (
+	    $clock->_where (0, 34, $data->{_anaSize}),
+		-tags  => "sec",
+		-arrow => "none",
+		-fill  => $data->{secsColor},
+		-width => 0.8);
+	if ($data->{handCenter}) {
+	    my $cntr = $data->{_anaSize} /  2;
+	    my $diam = $data->{_anaSize} / 35;
+	    $clock->createOval (($cntr - $diam) x 2, ($cntr + $diam) x 2,
+		-tags  => "sec",
+		-fill  => $data->{secsColor},
+		-width => 0.
+		);
+	    }
 	}
 
     $clock->_resize;
@@ -625,7 +630,7 @@ sub _run ($)
 	}
 
     $data->{Clock_s} = $t[0];
-    if ($data->{useAnalog}) {
+    if ($data->{useAnalog} && $data->{useSecHand}) {
 	$clock->coords ("sec",
 	    $clock->_where ($data->{Clock_s}, 34, $data->{_anaSize}));
 	}
@@ -652,26 +657,30 @@ use Tk::Clock;
 $clock = $parent->Clock (?-option => <value> ...?);
 
 $clock->config (	# These reflect the defaults
-    useDigital	=> 1,
+    timeZone	=> "",
+    backDrop    => "",
+
     useAnalog	=> 1,
-    autoScale	=> 0,
-    anaScale	=> 100,
-    ana24hour	=> 0,
     handColor	=> "Green4",
     secsColor	=> "Green2",
-    handCenter	=> 0,
     tickColor	=> "Yellow4",
     tickFreq	=> 1,
     tickDiff    => 0,
-    timeZone	=> "",
+    useSecHand  => 1,
+    handCenter	=> 0,
+    anaScale	=> 100,
+    autoScale	=> 0,
+    ana24hour	=> 0,
+    countDown   => 0,
+
+    useDigital	=> 1,
+    digiAlign   => "center",
     timeFont	=> "fixed",
     timeColor	=> "Red4",
     timeFormat	=> "HH:MM:SS",
     dateFont	=> "fixed",
     dateColor	=> "Blue4",
     dateFormat	=> "dd-mm-yy",
-    digiAlign   => "center",
-    backDrop    => "",
     );
 
 =head1 DESCRIPTION
@@ -735,6 +744,19 @@ hour-hand will cover a full day of 24 hours, noon is at the bottom
 where the 6 will normally display.
 
   $clock->config (ana24hour => 1);
+
+=item useSecHand (1)
+
+This controls weather the seconds-hand is shown.
+
+  $clock->config (useSecHand => 0);
+
+=item countDown (0)
+
+When C<countDown> is set to a true value, the clock will run backwards.
+This is a slightly experimental feature, it will not count down to a
+specific point in time, but will simply reverse the rotation, making
+the analog clock run counterclockwise.
 
 =item handColor ("Green4")
 
