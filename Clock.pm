@@ -676,43 +676,214 @@ $clock->config (	# These reflect the defaults
 
 =head1 DESCRIPTION
 
-Create a clock canvas with both an analog- and a digital display. Either
-can be disabled by setting useAnalog or useDigital to 0 resp.
+This module implements a Canvas-based clock widget for perl-Tk with lots
+of options to change the appearance.
 
-Legal dateFormat characters are d and dd for date, ddd and dddd for weekday,
-m, mm, mmm and mmmm for month, y and yy for year, w and ww for weeknumber and
-any separators :, -, / or space.
+Both analog and digital clocks are implemented.
 
-Legal timeFormat characters are H and HH for hour, h and hh for AM/PM hour,
-M and MM for minutes, S and SS for seconds, A for AM/PM indicator, d and dd
-for day-of-the week in two or three characters resp. and any separators :,
--, . or space.
+=head2 Options
 
-Meaningful values for tickFreq are 1, 5 and 15 showing all ticks, tick
-every 5 minutes or the four main ticks only, though any positive integer
-will do (put a tick on any tickFreq minute). When setting tickDiff to a
-true value, the major ticks will use a thicker line than the minor ticks.
+Below is a description of the options currently available. Their default
+value is in between parenthesis.
 
-The analog clock can be enlaged or reduced using anaScale for which the
-default of 100% is about 72x72 pixels. Setting autoScale to true, will
-try to resize the widget to it's container automatically.
+=over 4
 
-For digiAlign, "left", "center", and "right" are the only supported values.
-Any other value will be interpreted as the default "center".
+=item useAnalog (1)
+
+=item useDigital (1)
+
+Enable the analog clock (C<useAnalog>) and/or the digital clock (C<useDigital>)
+in the widget. The analog clock will always be displayed above the digital part
+
+  +----------+
+  |    ..    |  \
+  |  . \_ .  |   |_ Analog clock
+  |  .    .  |   |
+  |    ..    |  /
+  | 23:59:59 |  --- Digital time
+  | 31-12-09 |  --- Digital date
+  +----------+
+
+The analog clock displays ticks, hour hand, minutes hand and second hand.
+The digital part displays two parts, which are configurable. By default
+these are time and date.
+
+=item autoScale (0)
+
+When set to a true value, the widget will try to re-scale itself to
+automatically fit the containing widget.
+
+  $clock->config (autoScale => 1);
+
+=item anaScale (100)
+
+The analog clock can be enlarged or reduced using anaScale for which
+the default of 100% is about 72x72 pixels.
 
 When using C<pack> for your geometry management, be sure to pass
 C<-expand =&gt; 1, -fill =&gt; "both"> if you plan to resize with
 C<anaScale> or enable/disable either analog or digital after the
 clock was displayed.
 
-The C<backDrop> attribute only works if it is of class Tk::Photo
+  $clock->config (anaScale => 400);
+
+=item ana24hour (0)
+
+The default for the analog clock it the normal 12 hours display, as
+most clocks are. This option will show a clock where one round of the
+hour-hand will cover a full day of 24 hours, noon is at the bottom
+where the 6 will normally display.
+
+  $clock->config (ana24hour => 1);
+
+=item handColor ("Green4")
+
+=item secsColor ("Green2")
+
+Set the color of the hands of the analog clock. C<handColor> controls
+the color for both the hour-hand and the minute-hand. C<secsColor>
+controls the color for the seconds-hand.
+
+  $clock->config (
+      handColor => "#7F0000",
+      secsColor => "OrangeRed",
+      );
+
+=item handCenter (0)
+
+If set to a true value, will display a circular extension in the center
+of the analog clock that extends the hands as if they have a wider area
+at their turning point, like many station-type clocks (at least in the
+Netherlands) have.
+
+  $clock->config (handCenter => 1);
+
+=item tickColor ("Yellow4")
+
+Controls the color of the ticks in the analog clock.
+
+  $clock->config (tickColor => "White");
+
+=item tickFreq (1)
+
+=item tickDiff (0)
+
+C<tickFreq> controls how many ticks are shown in the analog clock.
+
+Meaningful values for C<tickFreq> are 1, 5 and 15 showing all ticks, tick
+every 5 minutes or the four main ticks only, though any positive integer
+will do (put a tick on any C<tickFreq> minute).
+
+When setting tickDiff to a true value, the major ticks will use a thicker
+line than the minor ticks.
+
+  $clock->config (
+      tickFreq => 5,
+      tickDiff => 1,
+      );
+
+=item timeZone ("")
+
+Set the timezone for the widget. The format should be the format recognized
+by the system. If unset, the local timezone is used.
+
+  $clock->config (timeZone => "Europe/Amsterdam");
+  $clock->config (timeZone => "MET-1METDST");
+
+=item timeFont ("fixed")
+
+Controls the font to be used for the top line in the digital clock. Will
+accept all fonts that are supported in your version of perl/Tk. This includes
+both True Type and X11 notation.
+
+  $clock->config (timeFont => "{Liberation Mono} 11");
+
+=item timeColor ("Red4")
+
+Controls the color of the first line (time) of the digital clock.
+
+  $clock->config (timeColor => "#00ff00");
+
+=item timeFormat ("HH:MM:SS")
+
+Defines the format of the first line of the digital clock. By default it
+will display the time in a 24-hour notation.
+
+Legal C<timeFormat> characters are C<H> and C<HH> for 24-hour, C<h> and C<hh>
+for AM/PM hour, C<M> and C<MM> for minutes, C<S> and C<SS> for seconds,
+C<A> for AM/PM indicator, C<d> and C<dd> for day-of-the week in two or three
+characters resp. and any separators C<:>, C<->, C<.> or C<space>.
+
+  $clock->config (timeFormat => "hh:MM A");
+
+=item dateFont ("fixed")
+
+Controls the font to be used for the bottom line in the digital clock. Will
+accept all fonts that are supported in your version of perl/Tk. This includes
+both True Type and X11 notation.
+
+  $clock->config (dateFont => "-misc-fixed-*-normal--15-*-c-iso8859-1");
+
+=item dateColor ("Blue4")
+
+Controls the color of the second line (date) of the digital clock.
+
+  $clock->config (dateColor => "Navy");
+
+=item dateFormat ("dd-mm-yy")
+
+Defines the format of the second line of the digital clock. By default it
+will display the date in three groups of two digits representing the day of
+the month, the month, and the last two digits of the year, separated by dashes.
+
+Legal C<dateFormat> characters are C<d> and C<dd> for date, C<ddd> and C<dddd>
+for weekday, C<m>, C<mm>, C<mmm> and C<mmmm> for month, C<y> and C<yy> for year,
+C<w> and C<ww> for weeknumber and any separators C<:>, C<->, C</> or C<space>.
+
+  $clock->config (dateFormat => "ww dd-mm");
+
+=item digiAlign ("center")
+
+Controls the placement of the text in the digital clock. The only legal values
+for C<digiAlign> are "left", "center", and "right".
+Any other value will be interpreted as the default "center".
+
+  $clock->config (digiAlign => "right");
+
+=item backDrop ("")
+
+By default the background of the clock is controlled by the C<-background>
+attribute to the constructor, which may default to the default background
+used in the perl/Tk script.
+
+The C<backDrop> attribute accepts any valid Tk::Photo object, and it will
+show (part of) the image as a backdrop of the clock
+
+  use Tk;
+  use Tk::Clock;
+  use Tk::Photo;
+  use Tk::PNG;
+
+  my $mainw = MainWindow->new;
+  my $backd = $mainw->Photo (
+      -file    => "image.png",
+      );
+  my $clock = $mainw->Clock (
+      -relief  => "flat",
+      )->pack (-expand => 1, -fill => "both");
+  $clock->config (
+      backDrop => $backd,
+      );
+  MainLoop;
+
+=back
+
+The C<new ()> constructor will also accept options valid for Canvas widgets,
+like C<-background> and C<-relief>.
 
 =head1 BUGS
 
 If the system load's too high, the clock might skip some seconds.
-
-Due to the fact that the year is expressed in 2 digit's, this
-widget is not Y2K compliant in the default configuration.
 
 There's no check if either format will fit in the given space.
 
