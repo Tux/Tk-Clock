@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.27";
+our $VERSION = "0.28";
 
 use Carp;
 
@@ -550,6 +550,17 @@ sub config ($@)
 			}
 		    $clock->after (5, ["_run" => $clock]);
 		    }
+		}
+	    }
+	elsif ($attr eq "backDrop" && $data->{useAnalog}) {
+	    $clock->delete ("back");
+	    if (ref $data->{backDrop} eq "Tk::Photo") {
+		$clock->createImage (0, 0,
+		    -anchor => "nw",
+		    -image  => $data->{backDrop},
+		    -tags   => "back",
+		    );
+		$clock->lower ("back", ($clock->find ("withtag", "tick"))[0]);
 		}
 	    }
 	elsif ($attr eq "useAnalog") {

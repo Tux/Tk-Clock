@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use Test::NoWarnings;
 
 BEGIN {
@@ -16,11 +16,12 @@ BEGIN {
 SKIP: {
     $Tk::PNG::VERSION or skip "Cannot load Tk::PNG", 7;
 
-    ok (my $m = MainWindow->new, "Main window");
-    ok (my $c = $m->Clock (-relief	=> "flat"),	"base clock");
-    ok (my $p = $m->Photo (-file => "t/eye.png"),	"Photo");
+    ok (my $m  = MainWindow->new, "Main window");
+    ok (my $c  = $m->Clock (-relief => "flat"),		"base clock");
+    ok (my $p1 = $m->Photo (-file   => "t/eye.png"),	"Photo 1");
+    ok (my $p2 = $m->Photo (-file   => "t/eye2.png"),	"Photo 2");
     ok ($c->config (
-	backDrop	=> $p,
+	backDrop	=> $p1,
 	timeFont	=> "{Liberation Mono} 11",
 	dateFont	=> "{Liberation Mono} 11",
 	timeFormat	=> " ",
@@ -35,7 +36,9 @@ SKIP: {
 	),						"config ()");
     ok ($c->pack,					"pack");
 
-    $c->after (5000, sub { $_->destroy for $c, $m; exit; });
+    $c->after ( 5000, sub { $c->config (backDrop => $p2) });
+
+    $c->after (10000, sub { $_->destroy for $c, $m; exit; });
 
     MainLoop;
     }
