@@ -58,7 +58,7 @@ else {
     }
 
 __END__
---- #YAML:1.1
+--- #YAML:1.0
 name:                    Tk::Clock
 version:                 VERSION
 abstract:                Clock widget with analog and digital display
