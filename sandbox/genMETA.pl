@@ -78,6 +78,8 @@ requires:
     Tk::Widget:          0
     Tk::Derived:         0
     Tk::Canvas:          0
+recommends:     
+    perl:                5.010001
 configure_requires:
     ExtUtils::MakeMaker: 0
 build_requires:
