@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.28";
+our $VERSION = "0.29";
 
 use Carp;
 
@@ -871,7 +871,7 @@ the month, the month, and the last two digits of the year, separated by dashes.
 
 Legal C<dateFormat> characters are C<d> and C<dd> for date, C<ddd> and C<dddd>
 for weekday, C<m>, C<mm>, C<mmm> and C<mmmm> for month, C<y> and C<yy> for year,
-C<w> and C<ww> for weeknumber and any separators C<:>, C<->, C</> or C<space>.
+C<w> and C<ww> for week-number and any separators C<:>, C<->, C</> or C<space>.
 
   $clock->config (dateFormat => "ww dd-mm");
 
