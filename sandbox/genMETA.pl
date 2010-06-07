@@ -27,6 +27,18 @@ while (<DATA>) {
     }
 
 if ($check) {
+    print STDERR "Check required and recommended module versions ...\n";
+    BEGIN { $V::NO_EXIT = $V::NO_EXIT = 1 } require V;
+    my %vsn = map { m/^\s*([\w:]+):\s+([0-9.]+)$/ ? ($1, $2) : () } @yml;
+    delete @vsn{qw( perl version )};
+    for (sort keys %vsn) {
+	$vsn{$_} eq "0" and next;
+	my $v = V::get_version ($_);
+	$v eq $vsn{$_} and next;
+	printf STDERR "%-35s %-6s => %s\n", $_, $vsn{$_}, $v;
+	}
+
+    print STDERR "Checking generated YAML ...\n";
     use YAML::Syck;
     use Test::YAML::Meta::Version;
     my $h;
@@ -79,7 +91,8 @@ requires:
     Tk::Derived:         0
     Tk::Canvas:          0
 recommends:     
-    perl:                5.010001
+    perl:                5.012001
+    Tk:                  804.029
 configure_requires:
     ExtUtils::MakeMaker: 0
 build_requires:
@@ -87,6 +100,9 @@ build_requires:
     Test::Harness:       0
     Test::More:          0
     Test::NoWarnings:    0
+build_recommends:
+    Test::Harness:       3.21
+    Test::More:          0.94
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          http://repo.or.cz/w/Tk-Clock.git
