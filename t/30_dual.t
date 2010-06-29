@@ -18,6 +18,7 @@ my %defconfig = (
     useDigital	=> 1,
     autoScale	=> 1,
     useAnalog	=> 1,
+    useInfo	=> 1,
     anaScale	=> 200,
     ana24hour	=> 0,
     secsColor	=> "Green",
@@ -27,12 +28,14 @@ my %defconfig = (
     timeColor	=> "lightBlue",
     timeFormat	=> "HH:MM:SS",
     dateFont	=> "-misc-fixed-medium-r-normal--15-*-75-75-c-*-iso8859-1",
-    dateColor	=> "Gold",
+    dateColor	=> "#cfb53b",
+    infoFont	=> "{DejaVu Sans} 12",
     );
 
 ok (my $c1 = $m->Clock (-background => "Black"),	"Clock Local TimeZone");
 like ($c1->config ((
     %defconfig,
+    infoFormat => "Omega",
     handColor  => "Red",
     timeZone   => $ENV{TZ} || undef,
     dateFormat => "Local",
@@ -42,6 +45,8 @@ ok ($c1->grid (-column => 0, -row => 0, -sticky => "news"), "grid");
 ok (my $c2 = $m->Clock (-background => "Black"),	"Clock GMT");
 like ($c2->config (
     %defconfig,
+    infoFormat => "BREITLING",
+    infoFont	=> "{DejaVu Sans} 10",
     handColor  => "Orange",
     timeZone   => "GMT",
     dateFormat => "London (GMT)",
@@ -51,6 +56,7 @@ ok ($c2->grid (-column => 0, -row => 1, -sticky => "news", -padx => 20), "grid")
 ok (my $c3 = $m->Clock (-background => "Black"),	"Clock MET-1METDST");
 like ($c3->config (
     %defconfig,
+    infoFormat => "HH:MM:SS",
     handColor  => "Yellow",
     timeZone   => "MET-1METDST",
     dateFormat => "Amsterdam (MET)",
@@ -60,6 +66,7 @@ ok ($c3->grid (-column => 1, -row => 0, -sticky => "news", -pady => 20), "grid")
 ok (my $c4 = $m->Clock (-background => "Black"),	"Clock Tokyo");
 like ($c4->config (
     %defconfig,
+    infoFormat => "Tissot",
     handColor  => "Yellow",
     timeZone   => "Asia/Tokyo",
     dateFormat => "Asia/Tokyo",
