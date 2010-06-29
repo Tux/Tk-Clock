@@ -1,4 +1,4 @@
-personal_ws-1.1 en 33 
+personal_ws-1.1 en 337
 Achim
 anaScale
 API
@@ -13,6 +13,9 @@ dateFormat
 digiAlign
 handCenter
 handColor
+infoColor
+infoFont
+infoFormat
 Ing
 multi
 OO
@@ -30,5 +33,6 @@ timeFormat
 Tk
 useAnalog
 useDigital
+useInfo
 useSecHand
 yy
