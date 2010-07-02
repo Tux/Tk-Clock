@@ -11,6 +11,23 @@ DESCRIPTION
     The year is displayed in two digits  in the default configu-
     ration, which makes it not Y2K compliant.
 
+COPYING:
+    Copyright (c) 1998-2010 H.Merijn Brand.  All rights reserved.
+
+    This program is free software; you can redistribute it and/or
+    modify it under the same terms as Perl itself.
+
+    Recent changes can be (re)viewed in the public GIT repository
+    at http://repo.or.cz/w/Tk-Clock.git
+    Feel free to clone your own copy:
+
+     $ git clone http://repo.or.cz/r/Tk-Clock.git Tk-Clock
+
+    or get it as a tgz:
+
+     $ wget --output-document=Tk-Clock-git.tgz \
+               'http://repo.or.cz/w/Tk-Clock.git?a=snapshot;sf=tgz'
+
 PREREQUISITES
     perl5 (probably 5.004.04 or better)
     Tk (probably 400.xxx or better)
