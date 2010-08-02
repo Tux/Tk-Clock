@@ -36,6 +36,7 @@ $c->after ($delay, sub {
     ok ($c->config (
 	tickColor  => "Yellow",
 	useAnalog  => 1,
+	useInfo    => 0,
 	useDigital => 0,
 	), "Blue4   Ad Yellow");
     });
@@ -45,6 +46,7 @@ $c->after ($delay, sub {
     $c->configure (-background => "Tan4");
     ok ($c->config (
 	useAnalog  => 0,
+	useInfo    => 0,
 	useDigital => 1,
 	), "Tan4    aD");
     });
@@ -54,6 +56,7 @@ $c->after ($delay, sub {
     $c->configure (-background => "Maroon4");
     ok ($c->config (
 	useAnalog  => 1,
+	useInfo    => 1,
 	useDigital => 1,
 	dateFormat => "m/d/y",
 	timeFormat => "hh:MM A",
@@ -65,6 +68,7 @@ $c->after ($delay, sub {
     $c->configure (-background => "Red4");
     ok ($c->config (
 	useAnalog  => 0,
+	useInfo    => 0,
 	useDigital => 1,
 	dateFormat => "mmm yyy",
 	timeFormat => "HH:MM:SS",
@@ -76,6 +80,7 @@ $c->after ($delay, sub {
     $c->configure (-background => "Gray10");
     ok ($c->config (
 	useAnalog  => 1,
+	useInfo    => 1,
 	useDigital => 1,
 	digiAlign  => "right",
 	), "Gray10  right digital");
@@ -86,6 +91,7 @@ $c->after ($delay, sub {
     $c->configure (-background => "Gray30");
     ok ($c->config (
 	useAnalog  => 1,
+	useInfo    => 0,
 	useDigital => 1,
 	digiAlign  => "left",
 	), "Gray30  left digital");
@@ -96,6 +102,7 @@ $c->after ($delay, sub {
     $c->configure (-background => "Purple4");
     ok ($c->config (
 	useAnalog  => 0,
+	useInfo    => 0,
 	useDigital => 1,
 	dateFormat => "dddd\nd mmm yyy",
 	timeFormat => "",
@@ -107,8 +114,10 @@ $c->after ($delay, sub {
     $c->configure (-background => "Gray75");
     ok ($c->config (
 	useAnalog  => 1,
+	useInfo    => 1,
 	useDigital => 0,
 	anaScale   => 300,
+	infoFormat => "Tk-Clock",
 	), "Gray75  Ad scale 300");
     });
 
@@ -116,6 +125,7 @@ $delay += $period;
 $c->after ($delay, sub {
     ok ($c->config (
 	useAnalog  => 1,
+	useInfo    => 0,
 	useDigital => 0,
 	anaScale   => 67,
 	tickFreq   => 5,
@@ -126,6 +136,7 @@ $delay += $period;
 $c->after ($delay, sub {
     ok ($c->config (
 	useAnalog  => 1,
+	useInfo    => 0,
 	useDigital => 1,
 	anaScale   => 100,
 	tickFreq   => 5,
@@ -147,6 +158,7 @@ $c->after ($delay, sub {
     $c->configure (-background => "Black");
     ok ($c->config ({
 	useAnalog  => 1,
+	useInfo    => 0,
 	useDigital => 0,
 	secsColor  => "Red",
 	tickColor  => "White",

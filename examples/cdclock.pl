@@ -15,6 +15,8 @@ $m->configure (
     -background	=> $bw[1],
     );
 
+my $face = $^O =~ m/mswin/i ? "Arial" : "DejaVu Sans Mono";
+
 my $c = $m->Clock (
     -background	=> $bw[1],
     -relief	=> "flat",
@@ -27,6 +29,7 @@ my $c = $m->Clock (
     );
 $c->config (
     useDigital	=> 0,
+    useInfo	=> 1,
     useAnalog	=> 1,
     secsColor	=> "Red",
     handColor	=> $bw[0],
@@ -36,6 +39,9 @@ $c->config (
     handCenter	=> 1,
     anaScale	=> 800,
     autoScale	=> 1,
+    infoFormat	=> "",
+    infoFont	=> "{$face} 48",
+    infoColor	=> "Gray10",
     );
 
 my ($l, $rest, $end, $secs, $left) = ("");
@@ -66,6 +72,7 @@ sub rest
 	    $secs > 60 ? "Orange" : "Red");
 
     $left = sprintf "%02d:%02d", $secs / 60, $secs % 60;
+    $c->config (infoFormat => $left);
     $secs == 60 and $l->bell for 1..2;
     $secs  < 60 and $rest = $secs;
 
@@ -77,14 +84,15 @@ sub rest
     $l->bell for 1..10;
     $l->configure (-background	=> "Red");
     $l->after (30000, sub { $l->configure (-background => "Black") });
+    $c->config (infoFormat => "");
     $rest = "";
     $end  = undef;
     } # rest
 
 sub start
 {
-    my $val = shift;
-    $end = time + (60 * $val);
+    my $val = 60 * shift;
+    $end = time + $val;
     rest ();
     } # start
 
@@ -98,7 +106,7 @@ my $f = $m->Frame (-background => "Black")->pack (
 
 $l = $f->Label (
     -textvariable	=> \$rest,
-    -font		=> "{Arial} 240 bold",
+    -font		=> "{$face} 200 bold",
     -background		=> "Black",
     )->pack (-expand => 1, -side => "top", -fill => "both", -anchor => "c");
 

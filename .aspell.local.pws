@@ -1,4 +1,4 @@
-personal_ws-1.1 en 337
+personal_ws-1.1 en 38
 Achim
 anaScale
 API
@@ -30,6 +30,7 @@ tickFreq
 timeColor
 timeFont
 timeFormat
+timerValue
 Tk
 useAnalog
 useDigital

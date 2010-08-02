@@ -39,6 +39,7 @@ my %def_config = (
 
     ana24hour	=> 0,
     countDown	=> 0,
+    timerValue	=> 0,
 
     useInfo	=> 0,
 
@@ -437,10 +438,13 @@ sub config ($@)
 	    my %fmt = (
 		"S"	=> '%d',	# 45
 		"SS"	=> '%02d',	# 45
+		"Sc"	=> '%02d',	# 45	countdown
 		"M"	=> '%d',	# 7
 		"MM"	=> '%02d',	# 07
+		"Mc"	=> '%02d',	# 07	countdown
 		"H"	=> '%d',	# 6
 		"HH"	=> '%02d',	# 06
+		"Hc"	=> '%02d',	# 06	countdown
 		"h"	=> '%d',	# 6	AM/PM
 		"hh"	=> '%02d',	# 06	AM/PM
 		"A"	=> '%s',	# PM
@@ -478,7 +482,8 @@ sub config ($@)
 			}
 		    else {
 			$args .= ', $' . substr ($f, 0, 1);
-			$f =~ m/^y+$/ and
+			$f =~ m/^[HMS]c/ and $args .= "c";
+			$f =~ m/^y+$/    and
 			    $args .= length ($f) < 3 ? " % 100" : " + 1900";
 			}
 		    }
@@ -490,12 +495,16 @@ sub config ($@)
 	    $data->{"fmt".substr $attr, 0, 1} = eval "
 		sub
 		{
-		    my (\$S, \$M, \$H, \$d, \$m, \$y, \$wd, \$yd) = \@_;
+		    my (\$S,  \$M,  \$H, \$d, \$m, \$y, \$wd, \$yd, \$dst,
+			\$Sc, \$Mc, \$Hc) = \@_;
 		    my \$w = \$yd / 7 + 1;
 		    my \$h = \$H % 12;
 		    my \$A = \$H > 11 ? 'PM' : 'AM';
 		    sprintf qq!$fmt!$args;
 		    }";
+	    }
+	elsif ($attr eq "timerValue") {
+	    $data->{timerStart} = $data->{timerValue} ? time : undef;
 	    }
 	elsif ($attr eq "tickFreq") {
 #	    $data->{tickFreq} < 1 ||
@@ -558,6 +567,15 @@ sub config ($@)
 		}
 	    $clock->after (5, ["_run" => $clock]);
 	    }
+	elsif ($attr eq "useInfo") {
+	    if ($old ^ $data->{useInfo} && $data->{useAnalog}) {
+		$clock->_destroyAnalog;
+		$clock->_destroyDigital;
+		$clock->_createAnalog;
+		$data->{useDigital} and $clock->_createDigital;
+		}
+	    $clock->after (5, ["_run" => $clock]);
+	    }
 	elsif ($attr eq "useDigital") {
 	    if    ($old == 1 && !$data->{useDigital}) {
 		$clock->_destroyDigital;
@@ -602,6 +620,26 @@ sub _run ($)
     $t == $data->{_time_} and return;	# Same time, no update
     $data->{_time_} = $t;
     my @t = localtime $t;
+
+    my ($Sc, $Mc, $Hc) = (0, 0, 0);
+    if ($data->{timerValue}) {
+	use integer;
+
+	$data->{timerStart} //= $t;
+	my $tv = $data->{timerValue} - ($t - $data->{timerStart});
+	if ($tv < 0) {
+	    $data->{timerValue} = 0;
+	    $data->{timerStart} = undef;
+	    }
+	else {
+	    $Sc = $tv % 60;
+	    $tv /= 60;
+	    $Mc = $tv % 60;
+	    $tv /= 60;
+	    $Hc = $tv;
+	    }
+	}
+    push @t, $Sc, $Mc, $Hc;
 
     unless ($t[2] == $data->{Clock_h}) {
 	$data->{Clock_h} = $t[2];
@@ -666,6 +704,7 @@ $clock->config (	# These reflect the defaults
     autoScale	=> 0,
     ana24hour	=> 0,
     countDown   => 0,
+    timerValue  => 0,
 
     useInfo	=> 0,
     infoColor	=> "#cfb53b",
@@ -762,6 +801,15 @@ This is a slightly experimental feature, it will not count down to a
 specific point in time, but will simply reverse the rotation, making
 the analog clock run counterclockwise.
 
+=item timerValue (0)
+
+This represents a countdown timer.
+
+When setting C<timerValue> to a number of seconds, the format values
+C<Hc>, C<Mc>, and C<Sc> will represent the hour, minute and second of
+the this value. When the time reaches 0, all countdown values are
+reset to 0.
+
 =item handColor ("Green4")
 
 =item secsColor ("Green2")
@@ -835,12 +883,14 @@ Controls the color of the first line (time) of the digital clock.
 Defines the format of the first line of the digital clock. By default it
 will display the time in a 24-hour notation.
 
-Legal C<timeFormat> characters are C<H> and C<HH> for 24-hour, C<h> and C<hh>
-for AM/PM hour, C<M> and C<MM> for minutes, C<S> and C<SS> for seconds,
-C<A> for AM/PM indicator, C<d> and C<dd> for day-of-the month, C<ddd> and
-C<dddd> for short and long weekday, C<m>, C<mm>, C<mmm> and C<mmmm> for month,
-C<y> and C<yy> for year, C<w> and C<ww> for week-number and any separators
-C<:>, C<->, C</> or C<space>.
+Legal C<timeFormat> characters are C<H> and C<HH> for 24-hour, C<h> and
+C<hh> for AM/PM hour, C<M> and C<MM> for minutes, C<S> and C<SS> for
+seconds, C<Hc> for countdown/timer hour, C<Mc> for countdown/timer
+minutes, C<Sc> for countdown/timer seconds, C<A> for AM/PM indicator,
+C<d> and C<dd> for day-of-the month, C<ddd> and C<dddd> for short and
+long weekday, C<m>, C<mm>, C<mmm> and C<mmmm> for month, C<y> and C<yy>
+for year, C<w> and C<ww> for week-number and any separators C<:>, C<->,
+C</> or C<space>.
 
   $clock->config (timeFormat => "hh:MM A");
 

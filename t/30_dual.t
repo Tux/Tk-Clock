@@ -45,8 +45,9 @@ ok ($c1->grid (-column => 0, -row => 0, -sticky => "news"), "grid");
 ok (my $c2 = $m->Clock (-background => "Black"),	"Clock GMT");
 like ($c2->config (
     %defconfig,
-    infoFormat => "BREITLING",
-    infoFont	=> "{DejaVu Sans} 10",
+    infoFormat => "Hc:Mc:Sc",
+    infoFont   => "{DejaVu Sans} 10",
+    timerValue => 12345,	# 04:25:45
     handColor  => "Orange",
     timeZone   => "GMT",
     dateFormat => "London (GMT)",
