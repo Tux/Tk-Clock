@@ -9,6 +9,7 @@ our $VERSION = "0.30";
 
 use Carp;
 
+use Tk;
 use Tk::Widget;
 use Tk::Derived;
 use Tk::Canvas;
@@ -73,8 +74,8 @@ my %def_config = (
     _digSize	=> 26,		# Height
     );
 
-sub _month ($$)
-{
+sub _month	# (month, size)
+{    #   m    mm    mmm    mmmm
     [[  "1", "01", "Jan", "January"	],
      [  "2", "02", "Feb", "February"	],
      [  "3", "03", "Mar", "March"	],
@@ -89,7 +90,7 @@ sub _month ($$)
      [ "12", "12", "Dec", "December"	]]->[$_[0]][$_[1]];
     } # _month
 
-sub _wday ($$)
+sub _wday	# (wday, size)
 {
     [[ "Sun", "Sunday"		],
      [ "Mon", "Monday"		],
@@ -100,18 +101,18 @@ sub _wday ($$)
      [ "Sat", "Saturday"	]]->[$_[0]][$_[1]];
     } # _wday
 
-sub _min ($$)
+sub _min
 {
     $_[0] <= $_[1] ? $_[0] : $_[1];
     } # _min
 
-sub _max ($$)
+sub _max
 {
     $_[0] >= $_[1] ? $_[0] : $_[1];
     } # _max
 
 # Transparent packInfo for pack/grid/place/form
-sub _packinfo ($)
+sub _packinfo
 {
     my $clock = shift;
 
@@ -139,7 +140,7 @@ sub _packinfo ($)
     %pi;
     } # _packinfo
 
-sub _resize ($)
+sub _resize
 {
     my $clock = shift;
 
@@ -165,7 +166,7 @@ sub _resize ($)
     } # _resize
 
 # Callback when auto-resize is called
-sub _resize_auto ($)
+sub _resize_auto
 {
     my $clock = shift;
     my $data  = $clock->privateData;
@@ -194,7 +195,7 @@ sub _resize_auto ($)
     $clock->_resize;
     } # _resize_auto
 
-sub _createDigital ($)
+sub _createDigital
 {
     my $clock = shift;
 
@@ -229,7 +230,7 @@ sub _createDigital ($)
     $clock->_resize;
     } # _createDigital
 
-sub _destroyDigital ($)
+sub _destroyDigital
 {
     my $clock = shift;
 
@@ -237,7 +238,7 @@ sub _destroyDigital ($)
     $clock->delete ("time");
     } # _destroyDigital
 
-sub _where ($$$$)
+sub _where
 {
     my ($clock, $tick, $len, $anaSize) = @_;      # ticks 0 .. 59
     my ($x, $y, $angle);
@@ -250,7 +251,7 @@ sub _where ($$$$)
     ($h - $x / 4, $h + $y / 4, $h + $x, $h - $y);
     } # _where
 
-sub _createAnalog ($)
+sub _createAnalog
 {
     my $clock = shift;
 
@@ -341,7 +342,7 @@ sub _createAnalog ($)
     $clock->_resize;
     } # _createAnalog
 
-sub _destroyAnalog ($)
+sub _destroyAnalog
 {
     my $clock = shift;
 
@@ -384,7 +385,7 @@ sub Populate
     $clock->repeat (995, ["_run" => $clock]);
     } # Populate
 
-sub config ($@)
+sub config
 {
     my $clock = shift;
 
@@ -490,16 +491,16 @@ sub config ($@)
 		    }
 		}
 	    $data->{Clock_h} = -1;	# force update;
-	    $data->{"fmt".substr $attr, 0, 1} = eval "
-		sub
-		{
-		    my (\$S,  \$M,  \$H, \$d, \$m, \$y, \$wd, \$yd, \$dst,
-			\$Sc, \$Mc, \$Hc) = \@_;
-		    my \$w = \$yd / 7 + 1;
-		    my \$h = \$H % 12;
-		    my \$A = \$H > 11 ? 'PM' : 'AM';
-		    sprintf qq!$fmt!$args;
-		    }";
+	    $data->{"fmt".substr $attr, 0, 1} = eval join "\n" =>
+		 q[ sub							],
+		 q[ {							],
+		 q[     my ($S,  $M,  $H, $d, $m, $y, $wd, $yd, $dst,	],
+		 q[ 	    $Sc, $Mc, $Hc) = @_;			],
+		 q[     my $w = $yd / 7 + 1;				],
+		 q[     my $h = $H % 12;				],
+		 q[     my $A = $H > 11 ? "PM" : "AM";			],
+		qq[     sprintf qq!$fmt!$args;				],
+		 q[     }						];
 	    }
 	elsif ($attr eq "timerValue") {
 	    $data->{timerStart} = $data->{timerValue} ? time : undef;
@@ -607,7 +608,7 @@ sub config ($@)
     $clock;
     } # config
 
-sub _run ($)
+sub _run
 {
     my $clock = shift;
 
@@ -623,7 +624,7 @@ sub _run ($)
     if ($data->{timerValue}) {
 	use integer;
 
-	$data->{timerStart} //= $t;
+	defined $data->{timerStart} or $data->{timerStart} = $t;
 	my $tv = $data->{timerValue} - ($t - $data->{timerStart});
 	if ($tv < 0) {
 	    $data->{timerValue} = 0;
@@ -726,10 +727,17 @@ of options to change the appearance.
 
 Both analog and digital clocks are implemented.
 
-=head2 Options
+=head1 METHODS
 
-Below is a description of the options currently available. Their default
-value is in between parenthesis.
+=head2 Clock
+
+This is the constructor. It does accept the standard widget options plus those
+described in L</config>.
+
+=head2 config
+
+Below is a description of the options/attributes currently available. Their
+default value is in between parenthesis.
 
 =over 4
 
@@ -994,6 +1002,10 @@ There's no check if either format will fit in the given space.
 * Countdown clock API, incl action when done.
 * Better docs for the attributes
 
+=head1 SEE ALSO
+
+Tk(3), Tk::Canvas(3), Tk::Widget(3), Tk::Derived(3)
+
 =head1 AUTHOR
 
 H.Merijn Brand <h.m.brand@xs4all.nl>
@@ -1004,7 +1016,7 @@ Thanks to Achim Bohnet for introducing me to OO (and converting
     the basics of my clock.pl to Tk::Clock.pm).
 Thanks to Sriram Srinivasan for understanding OO though his Panther book.
 Thanks to all CPAN providers for support of different modules to learn from.
-Thanks to all who have given me feedback.
+Thanks to all who have given me feedback and weird ideas.
 
 =head1 COPYRIGHT AND LICENSE
 
