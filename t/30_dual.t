@@ -35,7 +35,7 @@ my %defconfig = (
 
 ok (my $c1 = $m->Clock (%defconfig),			"Clock Local TimeZone");
 like ($c1->config ((
-    anaScale	=> 200,
+    anaScale   => 200,
     infoFormat => "Omega",
     handColor  => "Red",
     timeZone   => $ENV{TZ} || undef,
@@ -45,7 +45,7 @@ ok ($c1->grid (-column => 0, -row => 0, -sticky => "news"), "grid");
 
 ok (my $c2 = $m->Clock (%defconfig),			"Clock GMT");
 like ($c2->config (
-    anaScale	=> 200,
+    anaScale   => 200,
     infoFormat => "Hc:Mc:Sc",
     infoFont   => "{DejaVu Sans} 10",
     timerValue => 12345,	# 04:25:45
@@ -57,7 +57,7 @@ ok ($c2->grid (-column => 0, -row => 1, -sticky => "news", -padx => 20), "grid")
 
 ok (my $c3 = $m->Clock (%defconfig),			"Clock MET-1METDST");
 like ($c3->config (
-    anaScale	=> 200,
+    anaScale   => 200,
     infoFormat => "HH:MM:SS",
     handColor  => "Yellow",
     timeZone   => "MET-1METDST",
@@ -67,7 +67,8 @@ ok ($c3->grid (-column => 1, -row => 0, -sticky => "news", -pady => 20), "grid")
 
 ok (my $c4 = $m->Clock (%defconfig),			"Clock Tokyo");
 like ($c4->config (
-    anaScale	=> 200,
+    anaScale   => 200,
+    countDown  => 1,
     infoFormat => "Tissot",
     handColor  => "Yellow",
     timeZone   => "Asia/Tokyo",
