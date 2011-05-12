@@ -15,26 +15,27 @@ my ($delay, $period, $m, $c) = (0, 5000);
 ok ($m = MainWindow->new (-title => "clock", -background => "Black"),	"MainWindow");
 
 my %defconfig = (
+    -background	=> "Black",
+
     useDigital	=> 1,
     autoScale	=> 1,
     useAnalog	=> 1,
     useInfo	=> 1,
-    anaScale	=> 200,
     ana24hour	=> 0,
     secsColor	=> "Green",
     tickColor	=> "Blue",
     tickFreq	=> 1,
-    timeFont	=> "-misc-fixed-medium-r-normal--15-*-75-75-c-*-iso8859-1",
+    timeFont	=> "{fixed} 11",
     timeColor	=> "lightBlue",
     timeFormat	=> "HH:MM:SS",
-    dateFont	=> "-misc-fixed-medium-r-normal--15-*-75-75-c-*-iso8859-1",
+    dateFont	=> "{fixed} 11",
     dateColor	=> "#cfb53b",
-    infoFont	=> "{DejaVu Sans} 12",
+    infoFont	=> "{Helvetica} 11 bold",
     );
 
-ok (my $c1 = $m->Clock (-background => "Black"),	"Clock Local TimeZone");
+ok (my $c1 = $m->Clock (%defconfig),			"Clock Local TimeZone");
 like ($c1->config ((
-    %defconfig,
+    anaScale	=> 200,
     infoFormat => "Omega",
     handColor  => "Red",
     timeZone   => $ENV{TZ} || undef,
@@ -42,9 +43,9 @@ like ($c1->config ((
     )), qr(^Tk::Clock=HASH), "config");
 ok ($c1->grid (-column => 0, -row => 0, -sticky => "news"), "grid");
 
-ok (my $c2 = $m->Clock (-background => "Black"),	"Clock GMT");
+ok (my $c2 = $m->Clock (%defconfig),			"Clock GMT");
 like ($c2->config (
-    %defconfig,
+    anaScale	=> 200,
     infoFormat => "Hc:Mc:Sc",
     infoFont   => "{DejaVu Sans} 10",
     timerValue => 12345,	# 04:25:45
@@ -54,9 +55,9 @@ like ($c2->config (
     ), qr(^Tk::Clock=HASH), "config");
 ok ($c2->grid (-column => 0, -row => 1, -sticky => "news", -padx => 20), "grid");
 
-ok (my $c3 = $m->Clock (-background => "Black"),	"Clock MET-1METDST");
+ok (my $c3 = $m->Clock (%defconfig),			"Clock MET-1METDST");
 like ($c3->config (
-    %defconfig,
+    anaScale	=> 200,
     infoFormat => "HH:MM:SS",
     handColor  => "Yellow",
     timeZone   => "MET-1METDST",
@@ -64,9 +65,9 @@ like ($c3->config (
     ), qr(^Tk::Clock=HASH), "config");
 ok ($c3->grid (-column => 1, -row => 0, -sticky => "news", -pady => 20), "grid");
 
-ok (my $c4 = $m->Clock (-background => "Black"),	"Clock Tokyo");
+ok (my $c4 = $m->Clock (%defconfig),			"Clock Tokyo");
 like ($c4->config (
-    %defconfig,
+    anaScale	=> 200,
     infoFormat => "Tissot",
     handColor  => "Yellow",
     timeZone   => "Asia/Tokyo",
