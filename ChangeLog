@@ -1,3 +1,8 @@
+0.30 - Thu 12 May 2011 <h.m.brand@xs4all.nl>
+
+    - Initialization fix (attributes can be passed to constructor as it has
+      always be intended)
+
 0.29 - Mon 02 Aug 2010 <h.m.brand@xs4all.nl>
 
     - Spell-checking

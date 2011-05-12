@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.29";
+our $VERSION = "0.30";
 
 use Carp;
 
@@ -360,12 +360,10 @@ sub Populate
     $data->{_time_}  = -1;
 
     if (ref $args eq "HASH") {
-	my %args = %$args;
-	foreach my $arg (keys %args) {
+	foreach my $arg (keys %$args) {
 	    (my $attr = $arg) =~ s/^-//;
-	    exists $data->{$attr} and $data->{$attr} = delete $args{$arg};
+	    exists $data->{$attr} and $data->{$attr} = delete $args->{$arg};
 	    }
-	$args = { %args };
 	}
 
     $clock->SUPER::Populate ($args);
