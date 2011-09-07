@@ -14,7 +14,8 @@ if (exists $ENV{AUTOMATED_TESTING} and $ENV{AUTOMATED_TESTING}) {
 use ExtUtils::MakeMaker;
 
 my %wm = (
-    NAME	  =>   "Tk-Clock",
+    NAME	  =>   "Tk::Clock",
+    DISTNAME	  =>   "Tk-Clock",
     AUTHOR        =>   "H.Merijn Brand <h.m.brand\@xs4all.nl>",
     VERSION_FROM  =>   "Clock.pm",
     ABSTRACT_FROM =>   "Clock.pm",
