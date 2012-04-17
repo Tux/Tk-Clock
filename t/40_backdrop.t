@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 10;
 use Test::NoWarnings;
 
 BEGIN {
@@ -16,7 +16,10 @@ BEGIN {
 SKIP: {
     $Tk::PNG::VERSION or skip "Cannot load Tk::PNG", 7;
 
-    ok (my $m  = MainWindow->new, "Main window");
+    my $delay = $ENV{TK_TEST_LENGTH} || 5000;
+    my $m = eval { MainWindow->new  (-title => "clock"); } or
+	skip_all ("No valid Tk environment");
+
     ok (my $c  = $m->Clock (-relief => "flat"),		"base clock");
     ok (my $p1 = $m->Photo (-file   => "t/eye.png"),	"Photo 1");
     ok (my $p2 = $m->Photo (-file   => "t/eye2.png"),	"Photo 2");
@@ -36,9 +39,9 @@ SKIP: {
 	),						"config ()");
     ok ($c->pack,					"pack");
 
-    $c->after ( 5000, sub { $c->config (backDrop => $p2) });
+    $c->after (    $delay, sub { $c->config (backDrop => $p2) });
 
-    $c->after (10000, sub { $_->destroy for $c, $m; exit; });
+    $c->after (2 * $delay, sub { $_->destroy for $c, $m; exit; });
 
     MainLoop;
     }

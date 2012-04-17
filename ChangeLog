@@ -1,5 +1,6 @@
-0.33	- 11 Jan 2012, H.Merijn Brand
+0.33	- 17 Apr 2012, H.Merijn Brand
     * Upped Copyright to 2012
+    * Better protect against CPANTESTERS with non-Tk environment
 
 0.32	- 07 Sep 2011, H.Merijn Brand
     * NAME / DISTNAME in Makefile.PL

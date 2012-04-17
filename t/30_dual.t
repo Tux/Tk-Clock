@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 21;
+use Test::More tests => 20;
 use Test::NoWarnings;
 
 BEGIN {
@@ -11,8 +11,9 @@ BEGIN {
     use_ok ("Tk::Clock");
     }
 
-my ($delay, $period, $m, $c) = (0, 5000);
-ok ($m = MainWindow->new (-title => "clock", -background => "Black"),	"MainWindow");
+my ($delay, $period, $m, $c) = (0, $ENV{TK_TEST_LENGTH} || 5000);
+$m = eval { MainWindow->new  (-title => "clock", -background => "Black"); } or
+    skip_all ("No valid Tk environment");
 
 my %defconfig = (
     -background	=> "Black",
