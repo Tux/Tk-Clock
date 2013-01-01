@@ -1,5 +1,6 @@
 0.34	- 01 Jan 2013, H.Merijn Brand
     * Force update if time wound back (ntp, date command)
+    * Upped Copyright to 2013
 
 0.33	- 17 Apr 2012, H.Merijn Brand
     * Upped Copyright to 2012
