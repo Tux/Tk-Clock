@@ -1,3 +1,6 @@
+0.34	- 01 Jan 2013, H.Merijn Brand
+    * Force update if time wound back (ntp, date command)
+
 0.33	- 17 Apr 2012, H.Merijn Brand
     * Upped Copyright to 2012
     * Better protect against CPANTESTERS with non-Tk environment

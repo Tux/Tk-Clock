@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.33";
+our $VERSION = "0.34";
 
 use Carp;
 
@@ -617,6 +617,8 @@ sub _run
     $data->{timeZone} and local $ENV{TZ} = $data->{timeZone};
     my $t = time;
     $t == $data->{_time_} and return;	# Same time, no update
+    $t <  $data->{_time_} and		# Time wound back (ntp or date command)
+	($data->{Clock_h}, $data->{Clock_m}, $data->{Clock_s}) = (-1, -1, -1);
     $data->{_time_} = $t;
     my @t = localtime $t;
 
