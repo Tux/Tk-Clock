@@ -63,7 +63,7 @@ test_requires:
     Test::More:          0
     Test::NoWarnings:    0
 test_recommends:
-    Test::Harness:       3.25
+    Test::Harness:       3.26
     Test::More:          0.98
 resources:
     license:             http://dev.perl.org/licenses/

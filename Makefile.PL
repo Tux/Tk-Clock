@@ -31,7 +31,9 @@ my %wm = (
 
     dist	  => { COMPRESS	=> "gzip -9f",
 		       SUFFIX	=> ".gz",
-		       }
+		       },
+    macro         => { TARFLAGS => "--format=ustar -c -v -f",
+		       },
     );
 $ExtUtils::MakeMaker::VERSION > 6.30 and $wm{LICENSE} = "perl";
 
