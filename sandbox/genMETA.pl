@@ -54,7 +54,7 @@ requires:
     Tk::Derived:         0
     Tk::Canvas:          0
 recommends:     
-    perl:                5.016002
+    perl:                5.016003
     Tk:                  804.030
 configure_requires:
     ExtUtils::MakeMaker: 0
