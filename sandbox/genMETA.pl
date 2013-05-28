@@ -55,7 +55,7 @@ requires:
     Tk::Canvas:          0
 recommends:     
     perl:                5.016003
-    Tk:                  804.030
+    Tk:                  804.031
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
@@ -63,7 +63,7 @@ test_requires:
     Test::More:          0
     Test::NoWarnings:    0
 test_recommends:
-    Test::Harness:       3.26
+    Test::Harness:       3.28
     Test::More:          0.98
 resources:
     license:             http://dev.perl.org/licenses/
