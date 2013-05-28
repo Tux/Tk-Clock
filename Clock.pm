@@ -385,6 +385,15 @@ sub Populate
     $clock->repeat (995, ["_run" => $clock]);
     } # Populate
 
+my %attr_weight = (
+    useDigital	=> 99980,
+    digiAlign	=> 99985,
+    useAnalog	=> 99990,
+    useInfo	=> 99991,
+    tickFreq	=> 99992,
+    anaScale	=> 99995,
+    );
+
 sub config
 {
     my $clock = shift;
@@ -406,7 +415,12 @@ sub config
 
     my $data = $clock->privateData;
     my $autoScale;
-    foreach my $conf_spec (keys %$conf) {
+    # sort, so the recreational attribute will be done last
+    foreach my $conf_spec (
+	    map  { $_->[0] }
+	    sort { $a->[1] <=> $b->[1] }
+	    map  { [ $_, $attr_weight{$_} || unpack "s>", $_ ] }
+	    keys %$conf) {
 	(my $attr = $conf_spec) =~ s/^-//;
 	defined $def_config{$attr} && defined $data->{$attr} or next;
 	my $old = $data->{$attr};
