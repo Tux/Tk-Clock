@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.34";
+our $VERSION = "0.35";
 
 use Carp;
 
@@ -698,43 +698,43 @@ Tk::Clock - Clock widget with analog and digital display
 
 =head1 SYNOPSIS
 
-use Tk
-use Tk::Clock;
+  use Tk
+  use Tk::Clock;
 
-$clock = $parent->Clock (?-option => <value> ...?);
+  $clock = $parent->Clock (?-option => <value> ...?);
 
-$clock->config (	# These reflect the defaults
-    timeZone	=> "",
-    backDrop    => "",
+  $clock->config (        # These reflect the defaults
+      timeZone    => "",
+      backDrop    => "",
 
-    useAnalog	=> 1,
-    handColor	=> "Green4",
-    secsColor	=> "Green2",
-    tickColor	=> "Yellow4",
-    tickFreq	=> 1,
-    tickDiff    => 0,
-    useSecHand  => 1,
-    handCenter	=> 0,
-    anaScale	=> 100,
-    autoScale	=> 0,
-    ana24hour	=> 0,
-    countDown   => 0,
-    timerValue  => 0,
+      useAnalog   => 1,
+      handColor   => "Green4",
+      secsColor   => "Green2",
+      tickColor   => "Yellow4",
+      tickFreq    => 1,
+      tickDiff    => 0,
+      useSecHand  => 1,
+      handCenter  => 0,
+      anaScale    => 100,
+      autoScale   => 0,
+      ana24hour   => 0,
+      countDown   => 0,
+      timerValue  => 0,
 
-    useInfo	=> 0,
-    infoColor	=> "#cfb53b",
-    infoFormat	=> "HH:MM:SS",
-    infoFont	=> "fixed 6",
+      useInfo     => 0,
+      infoColor   => "#cfb53b",
+      infoFormat  => "HH:MM:SS",
+      infoFont    => "fixed 6",
 
-    useDigital	=> 1,
-    digiAlign   => "center",
-    timeFont	=> "fixed 6",
-    timeColor	=> "Red4",
-    timeFormat	=> "HH:MM:SS",
-    dateFont	=> "fixed 6",
-    dateColor	=> "Blue4",
-    dateFormat	=> "dd-mm-yy",
-    );
+      useDigital  => 1,
+      digiAlign   => "center",
+      timeFont    => "fixed 6",
+      timeColor   => "Red4",
+      timeFormat  => "HH:MM:SS",
+      dateFont    => "fixed 6",
+      dateColor   => "Blue4",
+      dateFormat  => "dd-mm-yy",
+      );
 
 =head1 DESCRIPTION
 
