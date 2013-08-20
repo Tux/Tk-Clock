@@ -42,6 +42,7 @@ my %def_config = (
     ana24hour	=> 0,
     countDown	=> 0,
     timerValue	=> 0,
+    localOffset	=> 0,
 
     useInfo	=> 0,
 
@@ -681,7 +682,7 @@ sub _run
     my $data = $clock->privateData;
 
     $data->{timeZone} and local $ENV{TZ} = $data->{timeZone};
-    my $t = time;
+    my $t = time + $data->{localOffset};
     $t == $data->{_time_} and return;	# Same time, no update
     $t <  $data->{_time_} and		# Time wound back (ntp or date command)
 	($data->{Clock_h}, $data->{Clock_m}, $data->{Clock_s}) = (-1, -1, -1);
@@ -778,6 +779,7 @@ Tk::Clock - Clock widget with analog and digital display
       ana24hour   => 0,
       countDown   => 0,
       timerValue  => 0,
+      localOffset => 0,
 
       useInfo     => 0,
       infoColor   => "#cfb53b",
@@ -889,6 +891,14 @@ When setting C<timerValue> to a number of seconds, the format values
 C<Hc>, C<Mc>, and C<Sc> will represent the hour, minute and second of
 the this value. When the time reaches 0, all countdown values are
 reset to 0.
+
+=item localOffset (0)
+
+The value of this attribute represents the local offset for this clock
+in seconds. Negative is back in time, positive is in the future.
+
+  # Wind back clock 4 days, 5 hours, 6 minutes and 7 seconds
+  $clock->config (localOffset => -363967);
 
 =item handColor ("Green4")
 

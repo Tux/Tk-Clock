@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 35;
+use Test::More tests => 36;
 use Test::NoWarnings;
 
 BEGIN {
@@ -118,6 +118,9 @@ $c->after ($delay, sub {
 	useAnalog  => 0,
 	useInfo    => 0,
 	useDigital => 1,
+	useLocale  => ($^O eq "MSWin32" ? "Japanese_Japan.932" : "ja_JP.utf8"),
+	timeFont   => "Helvetica 8",
+	dateFont   => "Helvetica 8",
 	dateFormat => "dddd\nd mmm yyy",
 	timeFormat => "",
 	), "Purple4 aD dddd\\nd mmm yyy ''");
@@ -131,6 +134,8 @@ $c->after ($delay, sub {
 	useInfo    => 1,
 	useDigital => 0,
 	anaScale   => 300,
+	timeFont   => "Helvetica 12",
+	dateFont   => "Helvetica 12",
 	infoFormat => "Tk-Clock",
 	), "Gray75  Ad scale 300");
     });
@@ -171,6 +176,7 @@ $delay += $period;
 $c->after ($delay, sub {
     $c->configure (-background => "Black");
     ok ($c->config ({
+	anaScale   => 250,
 	useAnalog  => 1,
 	useInfo    => 0,
 	useDigital => 0,
@@ -180,8 +186,20 @@ $c->after ($delay, sub {
 	handCenter => 1,
 	tickFreq   => 1,
 	tickDiff   => 1,
-	anaScale   => 250,
 	}), "        Station clock: hand centers and tick width");
+    });
+
+$delay += $period;
+$c->after ($delay, sub {
+    $c->configure (-background => "Black");
+    ok ($c->config ({
+	useInfo     => 1,
+	useDigital  => 1,
+	anaScale    => 300,
+	dateFormat  => "dd-mm-yyyy",
+	timeFormat  => "HH:MM:SS",
+	localOffset => -363967, # minus 4 days, 5 hours, 6 minutes and 7 seconds
+	}), "        Station clock: Time offset -4'05:06:07");
     });
 
 $delay += $period;

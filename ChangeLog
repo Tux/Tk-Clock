@@ -1,6 +1,7 @@
 0.35	- 20 Aug 2013, H.Merijn Brand
     * Indented SYNOPSIS (RT#85697 - Djibril Ousmanou)
     * Support for locales in long day and month formats
+    * Support for local offset (in seconds)
 
 0.34	- 28 May 2013, H.Merijn Brand
     * Force update if time wound back (ntp, date command)
