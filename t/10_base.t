@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 23;
+use Test::More tests => 35;
 use Test::NoWarnings;
 
 BEGIN {
@@ -16,6 +16,18 @@ $m = eval { MainWindow->new  (-title => "clock"); } or
     skip_all ("No valid Tk environment");
 
 ok ($c = $m->Clock (-background => "Black"),	"Clock Widget");
+
+# Safe to use en_US.UTF-8, as the fallback is C and all values are the same
+foreach my $loc ("C", "en_US.UTF-8") {
+    is (Tk::Clock::_month ($loc, 0, 0), "1",       "Month   format m    Jan in $loc");
+    is (Tk::Clock::_month ($loc, 2, 1), "03",      "Month   format mm   Mar in $loc");
+    is (Tk::Clock::_month ($loc, 4, 2), "May",     "Month   format mmm  May in $loc");
+    is (Tk::Clock::_month ($loc, 6, 3), "July",    "Month   format mmmm Jul in $loc");
+
+    is (Tk::Clock::_wday  ($loc, 0, 0), "Sun",     "Weekday format ddd  Sun in $loc");
+    is (Tk::Clock::_wday  ($loc, 2, 1), "Tuesday", "Weekday format dddd Tue in $loc");
+    }
+
 like ($c->config (
     tickColor => "Orange",
     handColor => "Red",

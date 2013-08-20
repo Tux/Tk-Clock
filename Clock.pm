@@ -23,6 +23,7 @@ my $ana_base = 73;	# Size base for 100%
 
 my %def_config = (
     timeZone	=> "",
+    useLocale	=> "C",
     backDrop	=> "",
 
     useAnalog	=> 1,
@@ -74,31 +75,75 @@ my %def_config = (
     _digSize	=> 26,		# Height
     );
 
+my %locale = (
+    C	=> {
+      month	=> [
+	#   m    mm    mmm    mmmm
+	[  "1", "01", "Jan", "January"	],
+	[  "2", "02", "Feb", "February"	],
+	[  "3", "03", "Mar", "March"	],
+	[  "4", "04", "Apr", "April"	],
+	[  "5", "05", "May", "May"	],
+	[  "6", "06", "Jun", "June"	],
+	[  "7", "07", "Jul", "July"	],
+	[  "8", "08", "Aug", "August"	],
+	[  "9", "09", "Sep", "September"],
+	[ "10", "10", "Oct", "October"	],
+	[ "11", "11", "Nov", "November"	],
+	[ "12", "12", "Dec", "December"	],
+	],
+      day	=> [
+	#  ddd    dddd
+	[ "Sun", "Sunday"		],
+	[ "Mon", "Monday"		],
+	[ "Tue", "Tuesday"		],
+	[ "Wed", "Wednesday"		],
+	[ "Thu", "Thursday"		],
+	[ "Fri", "Friday"		],
+	[ "Sat", "Saturday"		],
+	],
+      },
+    );
+
+sub _newLocale
+{
+    my $locale = shift or return $locale{C};
+
+    require POSIX;
+    require Encode;
+
+    my $curloc = POSIX::setlocale (&POSIX::LC_TIME, "")      || "C";
+    my $newloc = POSIX::setlocale (&POSIX::LC_TIME, $locale) || "C";
+    $locale{$newloc} and return $locale{$newloc};
+
+    my $l = $locale{$locale} = {};
+    foreach my $m (0 .. 11) {
+	@{$l->{month}[$m]} = map { Encode::decode ("UTF-8", $_) }
+	    $m + 1, $locale{C}{month}[$m][1],
+	    POSIX::strftime ("%b", 0, 0, 0, 1, $m, 113),
+	    POSIX::strftime ("%B", 0, 0, 0, 1, $m, 113);
+	}
+    foreach my $d (0 .. 6) {
+	@{$l->{day}[$d]}   = map { Encode::decode ("UTF-8", $_) }
+	    POSIX::strftime ("%a", 0, 0, 0, $d - 1, 0, 113),
+	    POSIX::strftime ("%A", 0, 0, 0, $d - 1, 0, 113);
+	}
+
+    POSIX::setlocale (&POSIX::LC_TIME, $curloc);
+
+    return $l;
+    } # _newLocale
+
 sub _month	# (month, size)
-{    #   m    mm    mmm    mmmm
-    [[  "1", "01", "Jan", "January"	],
-     [  "2", "02", "Feb", "February"	],
-     [  "3", "03", "Mar", "March"	],
-     [  "4", "04", "Apr", "April"	],
-     [  "5", "05", "May", "May"		],
-     [  "6", "06", "Jun", "June"	],
-     [  "7", "07", "Jul", "July"	],
-     [  "8", "08", "Aug", "August"	],
-     [  "9", "09", "Sep", "September"	],
-     [ "10", "10", "Oct", "October"	],
-     [ "11", "11", "Nov", "November"	],
-     [ "12", "12", "Dec", "December"	]]->[$_[0]][$_[1]];
+{
+    my ($locale, $m, $l) = @_;
+    ($locale{$locale} || $locale{C})->{month}[$m][$l];
     } # _month
 
 sub _wday	# (wday, size)
 {
-    [[ "Sun", "Sunday"		],
-     [ "Mon", "Monday"		],
-     [ "Tue", "Tuesday"		],
-     [ "Wed", "Wednesday"	],
-     [ "Thu", "Thursday"	],
-     [ "Fri", "Friday"		],
-     [ "Sat", "Saturday"	]]->[$_[0]][$_[1]];
+    my ($locale, $m, $l) = @_;
+    ($locale{$locale} || $locale{C})->{day}[$m][$l];
     } # _wday
 
 sub _min
@@ -392,6 +437,7 @@ my %attr_weight = (
     useInfo	=> 99991,
     tickFreq	=> 99992,
     anaScale	=> 99995,
+    useLocale	=>     1,
     );
 
 sub config
@@ -414,12 +460,14 @@ sub config
 	}
 
     my $data = $clock->privateData;
+    $attr_weight{$_} ||= unpack "s>", $_ for keys %def_config;
+
     my $autoScale;
     # sort, so the recreational attribute will be done last
     foreach my $conf_spec (
 	    map  { $_->[0] }
 	    sort { $a->[1] <=> $b->[1] }
-	    map  { [ $_, $attr_weight{$_} || unpack "s>", $_ ] }
+	    map  { [ $_, $attr_weight{$_} ] }
 	    keys %$conf) {
 	(my $attr = $conf_spec) =~ s/^-//;
 	defined $def_config{$attr} && defined $data->{$attr} or next;
@@ -446,6 +494,9 @@ sub config
 	    }
 	elsif ($attr eq "timeFont") {
 	    $clock->itemconfigure ("time", -font => $data->{timeFont});
+	    }
+	elsif ($attr eq "useLocale") {
+	    $locale{$data->{useLocale}} or _newLocale ($data->{useLocale});
 	    }
 	elsif ($attr eq "dateFormat" || $attr eq "timeFormat" || $attr eq "infoFormat") {
 	    my %fmt = (
@@ -482,16 +533,17 @@ sub config
 	    my @fmt = split m/\b($xfmt)\b/, $fmt;
 	    my $args = "";
 	    $fmt = "";
+	    my $locale = $data->{useLocale} || "C";
 	    foreach my $f (@fmt) {
 		if (defined $fmt{$f}) {
 		    $fmt .= $fmt{$f};
 		    if ($f =~ m/^m+$/) {
 			my $l = length ($f) - 1;
-			$args .= ", Tk::Clock::_month (\$m, $l)";
+			$args .= ", Tk::Clock::_month (q{$locale}, \$m, $l)";
 			}
 		    elsif ($f =~ m/^ddd+$/) {
 			my $l = length ($f) - 3;
-			$args .= ", Tk::Clock::_wday (\$wd, $l)";
+			$args .= ", Tk::Clock::_wday (q{$locale}, \$wd, $l)";
 			}
 		    else {
 			$args .= ', $' . substr ($f, 0, 1);
@@ -658,8 +710,11 @@ sub _run
 
     unless ($t[2] == $data->{Clock_h}) {
 	$data->{Clock_h} = $t[2];
+	$data->{fmtd} ||= sub {
+	    sprintf "%02d-%02d-%02d", $_[3], $_[4] + 1, $_[5] + 1900;
+	    };
 	$data->{useDigital} and
-	    $clock->itemconfigure ("date", -text => &{$data->{fmtd}} (@t));
+	    $clock->itemconfigure ("date", -text => $data->{fmtd}->(@t));
 	}
 
     unless ($t[1] == $data->{Clock_m}) {
@@ -679,11 +734,13 @@ sub _run
 	$data->{useSecHand} and
 	    $clock->coords ("sec",
 		$clock->_where ($data->{Clock_s}, 34, $data->{_anaSize}));
+	$data->{fmti} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
 	$data->{useInfo} and
-	    $clock->itemconfigure ("info", -text => &{$data->{fmti}} (@t));
+	    $clock->itemconfigure ("info", -text => $data->{fmti}->(@t));
 	}
+    $data->{fmtt} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
     $data->{useDigital} and
-	$clock->itemconfigure ("time", -text => &{$data->{fmtt}} (@t));
+	$clock->itemconfigure ("time", -text => $data->{fmtt}->(@t));
 
     $data->{autoScale} and $clock->_resize_auto;
     } # _run
@@ -705,6 +762,7 @@ Tk::Clock - Clock widget with analog and digital display
 
   $clock->config (        # These reflect the defaults
       timeZone    => "",
+      useLocale   => "C",
       backDrop    => "",
 
       useAnalog   => 1,
@@ -886,6 +944,11 @@ by the system. If unset, the local timezone is used.
   $clock->config (timeZone => "Europe/Amsterdam");
   $clock->config (timeZone => "MET-1METDST");
 
+=item useLocale ("C")
+
+Use this locale for the text shown in month formats C<mmm> and C<mmmm> and in
+day formats C<ddd> and C<dddd>.
+
 =item timeFont ("fixed 6")
 
 Controls the font to be used for the top line in the digital clock. Will
@@ -915,6 +978,9 @@ for year, C<w> and C<ww> for week-number and any separators C<:>, C<->,
 C</> or C<space>.
 
   $clock->config (timeFormat => "hh:MM A");
+
+The text shown in the formats C<ddd>, C<dddd>, C<mmm>, and C<mmmm> might be
+influenced by the setting of C<useLocale>. The fallback is locale "C".
 
 =item dateFont ("fixed 6")
 

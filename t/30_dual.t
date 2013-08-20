@@ -70,7 +70,8 @@ ok (my $c4 = $m->Clock (%defconfig),			"Clock Tokyo");
 like ($c4->config (
     anaScale   => 200,
     countDown  => 1,
-    infoFormat => "Tissot",
+    useLocale  => "ja_JP.utf8",
+    infoFormat => "ddd mmm",
     handColor  => "Yellow",
     timeZone   => "Asia/Tokyo",
     dateFormat => "Asia/Tokyo",
