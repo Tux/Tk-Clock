@@ -949,6 +949,9 @@ by the system. If unset, the local timezone is used.
 Use this locale for the text shown in month formats C<mmm> and C<mmmm> and in
 day formats C<ddd> and C<dddd>.
 
+  $clock->config (useLocale => $ENV{LC_TIME} // $ENV{LC_ALL}
+                            // $ENV{LANG}    // "nl_NL.utf8");
+
 =item timeFont ("fixed 6")
 
 Controls the font to be used for the top line in the digital clock. Will
@@ -1078,8 +1081,6 @@ There's no check if either format will fit in the given space.
 
 =head1 TODO
 
-* Using POSIX' strftime () for dateFormat. Current implementation
-  would probably make this very slow.
 * Full support for multi-line date- and time-formats with auto-resize.
 * Countdown clock API, incl action when done.
 * Better docs for the attributes
