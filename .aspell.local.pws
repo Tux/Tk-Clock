@@ -1,4 +1,4 @@
-personal_ws-1.1 en 38
+personal_ws-1.1 en 39
 Achim
 anaScale
 API
@@ -35,5 +35,6 @@ Tk
 useAnalog
 useDigital
 useInfo
+useLocale
 useSecHand
 yy

@@ -70,7 +70,7 @@ ok (my $c4 = $m->Clock (%defconfig),			"Clock Tokyo");
 like ($c4->config (
     anaScale   => 200,
     countDown  => 1,
-    useLocale  => "ja_JP.utf8",
+    useLocale  => ($^O eq "MSWin32" ? "Japanese_Japan.932" : "ja_JP.utf8"),
     infoFormat => "ddd mmm",
     handColor  => "Yellow",
     timeZone   => "Asia/Tokyo",
