@@ -6,6 +6,7 @@ Clock.pm
 examples/24hour.pl
 examples/cdclock.pl
 examples/countdown.pl
+examples/random.pl
 examples/simple.pl
 examples/station.pl
 examples/world.pl
