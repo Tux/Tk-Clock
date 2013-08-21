@@ -5,7 +5,7 @@ package Tk::Clock;
 use strict;
 use warnings;
 
-our $VERSION = "0.35";
+our $VERSION = "0.36";
 
 use Carp;
 
@@ -106,6 +106,14 @@ my %locale = (
       },
     );
 
+sub _decode
+{
+    my $s = shift;
+    $s && $s =~ m{[\x80-\xff]} or return $s;
+    my $u = eval { Encode::decode ("UTF-8", $s, Encode::FB_CROAK) };
+    return ($@ ? $s : $u);
+    } # _decode
+
 sub _newLocale
 {
     my $locale = shift or return $locale{C};
@@ -119,13 +127,13 @@ sub _newLocale
 
     my $l = $locale{$locale} = {};
     foreach my $m (0 .. 11) {
-	@{$l->{month}[$m]} = map { Encode::decode ("UTF-8", $_) }
+	@{$l->{month}[$m]} = map { _decode ($_) }
 	    $m + 1, $locale{C}{month}[$m][1],
 	    POSIX::strftime ("%b", 0, 0, 0, 1, $m, 113),
 	    POSIX::strftime ("%B", 0, 0, 0, 1, $m, 113);
 	}
     foreach my $d (0 .. 6) {
-	@{$l->{day}[$d]}   = map { Encode::decode ("UTF-8", $_) }
+	@{$l->{day}[$d]}   = map { _decode ($_) }
 	    POSIX::strftime ("%a", 0, 0, 0, $d - 1, 0, 113),
 	    POSIX::strftime ("%A", 0, 0, 0, $d - 1, 0, 113);
 	}
