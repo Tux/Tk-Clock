@@ -970,6 +970,10 @@ day formats C<ddd> and C<dddd>.
   $clock->config (useLocale => $ENV{LC_TIME} // $ENV{LC_ALL}
                             // $ENV{LANG}    // "nl_NL.utf8");
 
+See L<http://docs.moodle.org/dev/Table_of_locales> for a table of locales
+and the Windows equivalents. Windows might not have a UTF8 version available
+of the required locale.
+
 =item timeFont ("fixed 6")
 
 Controls the font to be used for the top line in the digital clock. Will
