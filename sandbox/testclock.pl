@@ -12,6 +12,7 @@ $m->configure (
     -background	=> $bw[1],
     );
 
+my $locale = $^O eq "MSWin32" ? "Hungarian_Hungary" : @ARGV ? "hu_HU" : "hu_HU.utf8";
 my $c = $m->Clock (
     -background	=> $bw[1],
     -relief	=> "flat",
@@ -40,7 +41,7 @@ $c->config (
     infoFormat  => "mmmm",
     handColor   => "Gray60",
     timeZone    => "Europe/Budapest",
-    useLocale   => "hu_HU.utf8",
+    useLocale   => $locale,
     timeFont    => "{DejaVu Sans Mono} 10",
     timeFormat  => "", #"Hungary/Budapest",
     localOffset => -2 * 86400,
