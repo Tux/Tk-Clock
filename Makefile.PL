@@ -27,6 +27,8 @@ my %wm = (
 		       "Carp"			=> 0,
 		       "Test::More"		=> 0,
 		       "Test::NoWarnings"	=> 0,
+		       "Encode"			=> 0,
+		       "POSIX"			=> 0,
 		       },
 
     dist	  => { COMPRESS	=> "gzip -9f",

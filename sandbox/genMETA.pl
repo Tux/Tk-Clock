@@ -53,17 +53,18 @@ requires:
     Tk::Widget:          0
     Tk::Derived:         0
     Tk::Canvas:          0
+    Encode:              0
+    POSIX:               0
 recommends:     
-    perl:                5.016003
+    perl:                5.018001
     Tk:                  804.031
+    Encode:              2.52
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
-    Test::Harness:       0
     Test::More:          0
     Test::NoWarnings:    0
 test_recommends:
-    Test::Harness:       3.28
     Test::More:          0.98
 resources:
     license:             http://dev.perl.org/licenses/
