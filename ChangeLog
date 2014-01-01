@@ -1,5 +1,6 @@
-0.36	- 21 Aug 2013, H.Merijn Brand
+0.36	- 01 Jan 2013, H.Merijn Brand
     - Fix locales for non-utf8 (and windows)
+    - Upped Copyright to 2014
 
 0.35	- 20 Aug 2013, H.Merijn Brand
     * Indented SYNOPSIS (RT#85697 - Djibril Ousmanou)
