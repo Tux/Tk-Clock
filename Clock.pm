@@ -432,6 +432,7 @@ sub Populate
     if (ref $args eq "HASH") {
 	foreach my $arg (keys %$args) {
 	    (my $attr = $arg) =~ s/^-//;
+	    $attr =~ m/^_/ and next; # Internal use only!
 	    exists $data->{$attr} and $data->{$attr} = delete $args->{$arg};
 	    }
 	}
@@ -495,6 +496,7 @@ sub config
 	    map  { [ $_, $attr_weight{$_} ] }
 	    keys %$conf) {
 	(my $attr = $conf_spec) =~ s/^-//;
+	$attr =~ m/^_/ and next; # Internal use only!
 	defined $def_config{$attr} && defined $data->{$attr} or next;
 	my $old = $data->{$attr};
 	$data->{$attr} = $conf->{$conf_spec};
