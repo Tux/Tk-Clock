@@ -522,6 +522,12 @@ sub config
 	elsif ($attr eq "timeFont") {
 	    $clock->itemconfigure ("time", -font => $data->{timeFont});
 	    }
+	elsif ($attr eq "infoColor") {
+	    $clock->itemconfigure ("info", -fill => $data->{infoColor});
+	    }
+	elsif ($attr eq "infoFont") {
+	    $clock->itemconfigure ("info", -font => $data->{infoFont});
+	    }
 	elsif ($attr eq "useLocale") {
 	    $locale{$data->{useLocale}} or _newLocale ($data->{useLocale});
 	    }
