@@ -106,6 +106,21 @@ my %locale = (
       },
     );
 
+sub _booleans
+{
+    my $data = shift;
+    $data->{$_} = !!$data->{$_} for qw(
+	ana24hour
+	autoScale
+	countDown
+	handCenter
+	useAnalog
+	useDigital
+	useInfo
+	useSecHand
+	);
+    } # _booleans
+
 sub _decode
 {
     my $s = shift;
@@ -420,6 +435,7 @@ sub Populate
 	    exists $data->{$attr} and $data->{$attr} = delete $args->{$arg};
 	    }
 	}
+    _booleans ($data);
 
     $clock->SUPER::Populate ($args);
 
@@ -667,6 +683,7 @@ sub config
 		}
 	    }
 	}
+    _booleans ($data);
     if (defined $autoScale) {
 	$data->{autoScale} = $autoScale;
 	if ($autoScale) {

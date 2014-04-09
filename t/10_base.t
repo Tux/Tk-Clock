@@ -71,7 +71,7 @@ $c->after ($delay, sub {
     ok ($c->config (
 	useAnalog  => 1,
 	useInfo    => 1,
-	useDigital => 1,
+	useDigital => 4,
 	dateFormat => "m/d/y",
 	timeFormat => "hh:MM A",
 	), "Maroon4 AD m/d/y hh:MM A");
