@@ -74,6 +74,7 @@ my %def_config = (
 
     _anaSize	=> $ana_base,	# Default size (height & width)
     _digSize	=> 26,		# Height
+    _digWdth	=> 72,		# Width
     );
 
 my %locale = (
@@ -218,7 +219,7 @@ sub _resize
     my $hght = $data->{useAnalog}  * $data->{_anaSize} +
 	       $data->{useDigital} * $data->{_digSize} + 1;
     my $wdth = _max ($data->{useAnalog}  * $data->{_anaSize},
-		     $data->{useDigital} * 72);
+		     $data->{useDigital} * $data->{_digWdth});
     my $dim  = "${wdth}x${hght}";
     my $geo   = $clock->parent->geometry;
     my ($pw, $ph) = split m/\D/, $geo; # Cannot use ->cget here
@@ -269,8 +270,27 @@ sub _createDigital
     my $clock = shift;
 
     my $data = $clock->privateData;
+
+    # Dynamically determine the size of the digital display
+    my @t = localtime (time + $data->{localOffset});
+    my ($wd, $hd) = do {
+	my $s_date = $data->{fmtd}->(@t, 0, 0, 0);
+	my $f = $clock->Label (-font => $data->{dateFont})->cget (-font);
+	my %fm = $clock->fontMetrics ($f);
+	($clock->fontMeasure ($f, $s_date), $fm{"-linespace"} // 9);
+	};
+    my ($wt, $ht) = do {
+	my $s_time = $data->{fmtt}->(@t, 0, 0, 0);
+	my $f = $clock->Label (-font => $data->{timeFont})->cget (-font);
+	my %fm = $clock->fontMetrics ($f);
+	($clock->fontMeasure ($f, $s_time), $fm{"-linespace"} // 9);
+	};
+    my $w = _max (72, int (1.1 * _max ($wt, $wd)));
+    $data->{_digSize} = $hd + 4 + $ht + 4; # height of date + time
+    $data->{_digWdth} = $w;
+
     my $wdth = _max ($data->{useAnalog}  * $data->{_anaSize},
-		     $data->{useDigital} * 72);
+		     $data->{useDigital} * $w);
     my ($pad, $anchor) = (5, "s");
     my ($x, $y) = ($wdth / 2, $data->{useAnalog} * $data->{_anaSize});
     if    ($data->{digiAlign} eq "left") {
@@ -279,14 +299,14 @@ sub _createDigital
     elsif ($data->{digiAlign} eq "right") {
 	($anchor, $x) = ("se", $wdth - $pad);
 	}
-    $clock->createText ($x, $y + $data->{_digSize},
+    $clock->createText ($x, $y + $ht + 4 + $hd,
 	-anchor	=> $anchor,
 	-width  => ($wdth - 2 * $pad),
 	-font   => $data->{dateFont},
 	-fill   => $data->{dateColor},
 	-text   => $data->{dateFormat},
 	-tags   => "date");
-    $clock->createText ($x, $y + 13,
+    $clock->createText ($x, $y + $ht + 2,
 	-anchor	=> $anchor,
 	-width  => ($wdth - 2 * $pad),
 	-font   => $data->{timeFont},
