@@ -10,6 +10,7 @@ MYMETA.yml
 pm_to_blib
 Tk$
 sandbox/
+xt/
 .releaserc
 .aspell.local.pws
 \.tar\.gz

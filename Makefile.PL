@@ -60,6 +60,13 @@ sub postamble
 		    "test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')"
 		    $(TEST_FILES) 3>valgrind.log
 		    );
+
+    my $min_vsn = ($] >= 5.010 && -d "xt" && -d "sandbox" && ($ENV{AUTOMATED_TESTING} || 0) != 1)
+	? join "\n" =>
+	    'test ::',
+	    '	-@env TEST_FILES="xt/*.t" make -e test_dynamic',
+	    ''
+	: "";
     join "\n" =>
 	'cover test_cover:',
 	'	ccache -C',
@@ -86,7 +93,8 @@ sub postamble
 	'	-@mv -f $(DISTVNAME).tar.gz $(DISTVNAME).tgz',
 	'	-@cpants_lint.pl $(DISTVNAME).tgz',
 	'	-@rm -f Debian_CPANTS.txt',
-	'';
+	'',
+	$min_vsn;
     } # postamble
 
 1;
