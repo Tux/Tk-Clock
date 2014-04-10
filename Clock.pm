@@ -277,13 +277,13 @@ sub _createDigital
 	my $s_date = $data->{fmtd}->(@t, 0, 0, 0);
 	my $f = $clock->Label (-font => $data->{dateFont})->cget (-font);
 	my %fm = $clock->fontMetrics ($f);
-	($clock->fontMeasure ($f, $s_date), $fm{"-linespace"} // 9);
+	($clock->fontMeasure ($f, $s_date), $fm{"-linespace"} || 9);
 	};
     my ($wt, $ht) = do {
 	my $s_time = $data->{fmtt}->(@t, 0, 0, 0);
 	my $f = $clock->Label (-font => $data->{timeFont})->cget (-font);
 	my %fm = $clock->fontMetrics ($f);
-	($clock->fontMeasure ($f, $s_time), $fm{"-linespace"} // 9);
+	($clock->fontMeasure ($f, $s_time), $fm{"-linespace"} || 9);
 	};
     my $w = _max (72, int (1.1 * _max ($wt, $wd)));
     $data->{_digSize} = $hd + 4 + $ht + 4; # height of date + time

@@ -1,9 +1,9 @@
-0.36	- 09 Apr 2014, H.Merijn Brand
-    - Fix locales for non-utf8 (and windows)
-    - Upped Copyright to 2014
-    - Make sure boolean attributes are 0 or 1
-    - Protect internal attributes from new and config calls
-    - Dynamically determine width of digital date and time
+0.36	- 10 Apr 2014, H.Merijn Brand
+    * Fix locales for non-utf8 (and windows)
+    * Upped Copyright to 2014
+    * Make sure boolean attributes are 0 or 1
+    * Protect internal attributes from new and config calls
+    * Dynamically determine width of digital date and time
 
 0.35	- 20 Aug 2013, H.Merijn Brand
     * Indented SYNOPSIS (RT#85697 - Djibril Ousmanou)
