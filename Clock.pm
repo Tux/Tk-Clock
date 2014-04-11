@@ -275,12 +275,14 @@ sub _createDigital
     my @t = localtime (time + $data->{localOffset});
     my ($wd, $hd) = do {
 	my $s_date = $data->{fmtd}->(@t, 0, 0, 0);
+	$s_date =~ s/\b([0-9])\b/0$1/g; # prepare "d" running from 9 to 10
 	my $f = $clock->Label (-font => $data->{dateFont})->cget (-font);
 	my %fm = $clock->fontMetrics ($f);
 	($clock->fontMeasure ($f, $s_date), $fm{"-linespace"} || 9);
 	};
     my ($wt, $ht) = do {
 	my $s_time = $data->{fmtt}->(@t, 0, 0, 0);
+	$s_time =~ s/\b([0-9])\b/0$1/g; # prepare "h" running from 9 to 10
 	my $f = $clock->Label (-font => $data->{timeFont})->cget (-font);
 	my %fm = $clock->fontMetrics ($f);
 	($clock->fontMeasure ($f, $s_time), $fm{"-linespace"} || 9);

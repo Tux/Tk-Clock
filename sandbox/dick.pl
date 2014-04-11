@@ -12,11 +12,12 @@ $c->config (
     useDigital	=> 1,
     digiAlign	=> "center",
     timeColor	=> "lightBlue",
-    timeFormat	=> "hh:MM:SS A",
+    timeFormat	=> "h:MM:SS A",
     dateColor	=> "lightBlue",
     dateFormat	=> "dd-mm-yyyy",
-    dateFont	=> "fixed 24",
-    timeFont	=> "fixed 18",
+    dateFont	=> "fixed 18",
+    timeFont	=> "fixed 24",
+    localOffset => $ARGV[0]||0,
     );
 $c->pack;
 
