@@ -1,3 +1,6 @@
+0.37	- 11 Apr 2014, H.Merijn Brand
+    - Use 12:15 AM instead of 00:15 AM
+
 0.36	- 10 Apr 2014, H.Merijn Brand
     * Fix locales for non-utf8 (and windows)
     * Upped Copyright to 2014
