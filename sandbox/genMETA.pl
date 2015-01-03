@@ -63,7 +63,7 @@ recommends:
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
-    Test::More:          0
+    Test::More:          0.88
     Test::NoWarnings:    0
 test_recommends:
     Test::More:          1.001014

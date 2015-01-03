@@ -1,6 +1,9 @@
-0.37	- 01 Jan 2015, H.Merijn Brand
-    - Use 12:15 AM instead of 00:15 AM
-    - Upped Copyright to 2015
+0.38	- 03 Jan 2015, H.Merijn Brand
+    * Fix skip_all. require Test::More 0.88
+
+0.37	- 02 Jan 2015, H.Merijn Brand
+    * Use 12:15 AM instead of 00:15 AM
+    * Upped Copyright to 2015
 
 0.36	- 10 Apr 2014, H.Merijn Brand
     * Fix locales for non-utf8 (and windows)

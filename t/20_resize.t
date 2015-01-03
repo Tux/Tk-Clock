@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 8;
-use Test::NoWarnings;
+use     Test::More;
+require Test::NoWarnings;
 
 BEGIN {
     use_ok ("Tk");
@@ -12,8 +12,11 @@ BEGIN {
     }
 
 my ($delay, $m, $c) = ($ENV{TK_TEST_LENGTH} || 10000);
-$m = eval { MainWindow->new  (-title => "clock"); } or
-    skip_all ("No valid Tk environment");
+unless ($m = eval { MainWindow->new  (-title => "clock") }) {
+    diag ("No valid Tk environment");
+    done_testing;
+    exit 0;
+    }
 
 ok ($c = $m->Clock (-background => "Black"),	"Clock Widget");
 like ($c->config (
@@ -34,7 +37,9 @@ $c->after ($delay, sub {
     ok (!Exists ($c), "Destroy Clock");
     $m->destroy;
     ok (!Exists ($m), "Destroy Main");
-    exit;
+
+    Test::NoWarnings::had_no_warnings ();
+    done_testing;
     });
 
 MainLoop;
