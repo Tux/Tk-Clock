@@ -7,5 +7,6 @@ skip_dist 1
 allow_glob_in_perls 1
 perls /pro/bin/perl\
 :/pro/bin/perl5.8.8\
-:/pro/bin/perl5.1[0246].*\
+:/pro/bin/perl5.1[02468].*\
+:/pro/bin/perl5.2[0].*\
 :/usr/bin/perl
