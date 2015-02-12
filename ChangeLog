@@ -1,5 +1,6 @@
 0.39	- 12 Feb 2015, H.Merijn Brand
     * Move repo to github
+    * Remove perl recommendation from META as it breaks cpan clients
 
 0.38	- 03 Jan 2015, H.Merijn Brand
     * Fix skip_all. require Test::More 0.88

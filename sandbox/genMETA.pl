@@ -57,7 +57,6 @@ requires:
     Encode:              0
     POSIX:               0
 recommends:     
-    perl:                5.020001
     Tk:                  804.032
     Encode:              2.67
 configure_requires:
