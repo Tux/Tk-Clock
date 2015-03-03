@@ -1,3 +1,6 @@
+0.40	- 03 Mar 2015, H.Merijn Brand
+    - 
+
 0.39	- 12 Feb 2015, H.Merijn Brand
     * Move repo to github
     * Remove perl recommendation from META as it breaks cpan clients
