@@ -1,4 +1,5 @@
 \.git
+\.travis.yml
 blib/
 cover_db/
 Makefile
