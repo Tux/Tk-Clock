@@ -12,7 +12,7 @@ BEGIN {
     use_ok ("Tk::Clock");
     }
 
-eval { require "Tk::PNG" };
+eval { require Tk::PNG; };
 unless ($Tk::PNG::VERSION) {
     diag "SKIP: cannot load Tk::PNG";
     done_testing;
