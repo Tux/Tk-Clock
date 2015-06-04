@@ -11,7 +11,7 @@ BEGIN {
     use_ok ("Tk::Clock");
     }
 
-my ($delay, $m, $c) = ($ENV{TK_TEST_LENGTH} || 10000);
+my ($delay, $m, $c) = ($ENV{TK_TEST_LENGTH} || 5000) * 2;
 unless ($m = eval { MainWindow->new  (-title => "clock") }) {
     diag ("No valid Tk environment");
     done_testing;
