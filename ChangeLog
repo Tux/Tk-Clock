@@ -1,5 +1,6 @@
-0.40	- 04 Jun 2015, H.Merijn Brand
+0.40	- 18 Aug 2015, H.Merijn Brand
     * Fix backdrop test
+    * Add CONTRIBUTING.md
 
 0.39	- 12 Feb 2015, H.Merijn Brand
     * Move repo to github
