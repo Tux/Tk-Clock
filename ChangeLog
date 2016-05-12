@@ -1,7 +1,8 @@
-0.40	- 18 Aug 2016, H.Merijn Brand
+0.40	- 12 May 2016, H.Merijn Brand
     * Fix backdrop test
     * Add CONTRIBUTING.md
     * It's 2016
+    * Tested with 5.24.0, blead and Tk (git)
 
 0.39	- 12 Feb 2015, H.Merijn Brand
     * Move repo to github
