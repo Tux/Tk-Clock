@@ -1174,7 +1174,7 @@ Thanks to all who have given me feedback and weird ideas.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 1999-2017 H.Merijn Brand
+Copyright (C) 1999-2018 H.Merijn Brand
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
