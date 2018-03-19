@@ -263,14 +263,14 @@ sub _createDigital {
     my ($wd, $hd) = do {
 	my $s_date = $data->{fmtd}->(@t, 0, 0, 0);
 	$s_date =~ s/\b([0-9])\b/0$1/g; # prepare "d" running from 9 to 10
-	my $f = $clock->Label (-font => $data->{dateFont})->cget (-font);
+	my $f  = $clock->Label (-font => $data->{dateFont})->cget (-font);
 	my %fm = $clock->fontMetrics ($f);
 	($clock->fontMeasure ($f, $s_date), $fm{"-linespace"} || 9);
 	};
     my ($wt, $ht) = do {
 	my $s_time = $data->{fmtt}->(@t, 0, 0, 0);
 	$s_time =~ s/\b([0-9])\b/0$1/g; # prepare "h" running from 9 to 10
-	my $f = $clock->Label (-font => $data->{timeFont})->cget (-font);
+	my $f  = $clock->Label (-font => $data->{timeFont})->cget (-font);
 	my %fm = $clock->fontMetrics ($f);
 	($clock->fontMeasure ($f, $s_time), $fm{"-linespace"} || 9);
 	};
@@ -489,7 +489,6 @@ sub config {
 	}
 
     my $data = $clock->privateData;
-    print STDERR "V: ", $], " => $]\n";
     my $pfmt = $] < 5.010 ? "s" : "s>";
     $attr_weight{$_} ||= unpack $pfmt, $_ for keys %def_config;
 
@@ -1125,6 +1124,17 @@ show (part of) the image as a backdrop of the clock
 
 The C<new ()> constructor will also accept options valid for Canvas widgets,
 like C<-background> and C<-relief>.
+
+=head1 TAGS
+
+As all of the clock is part of a Canvas, the items cannot be addressed as
+Subwidgets. You can however alter presentation afterwards using the tags:
+
+ my $clock = $mw->Clock->pack;
+ $clock->itemconfigure ("date", -fill => "Red");
+
+Currently defined tags are C<date>, C<hour>, C<info>, C<min>, C<sec>,
+C<tick>, and C<time>.
 
 =head1 BUGS
 
