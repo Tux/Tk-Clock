@@ -23,6 +23,10 @@ before_install:
  - (sleep 10; twm) &
 env:
   - AUTOMATED_TESTING=1 TK_TEST_LENGTH=120
+before_install:
+  - brew install cpanm                     || true
+install:
+  - cpanm --quiet --installdeps --notest . || true
 notifications:
   irc:
     channels:
