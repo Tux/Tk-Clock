@@ -1,6 +1,7 @@
 language: perl
 os:
   - linux
+dist: trusty
 perl:
   - "5.30"
   - "5.28"
@@ -15,14 +16,16 @@ perl:
   - "5.12"
   - "5.10"
   - "5.8"
+env:
+  global:
+    - AUTOMATED_TESTING=1
+    - TK_TEST_LENGTH=120
 before_install:
  - sudo apt-get update -qq
  - sudo apt-get install -qq xvfb
  - Xvfb :123 &
  - export DISPLAY=:123
  - (sleep 10; twm) &
-env:
-  - AUTOMATED_TESTING=1 TK_TEST_LENGTH=120
 before_install:
   - brew install cpanm                     || true
 install:
