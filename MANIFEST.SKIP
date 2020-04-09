@@ -11,8 +11,10 @@ pm_to_blib
 Tk$
 sandbox/
 xt/
+^doc/
 \.releaserc
 \.aspell.local.pws
 \.tar\.gz
 \.tgz
 \.tbz
+\.tmp

@@ -10,3 +10,4 @@ Tk
 *.tar.gz
 *.tgz
 *.old
+*.tmp

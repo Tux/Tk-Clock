@@ -1,0 +1,407 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Tk::Clock - Clock widget with analog and digital display</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:hmbrand@cpan.org" />
+</head>
+
+<body>
+
+
+
+<ul id="index">
+  <li><a href="#NAME">NAME</a></li>
+  <li><a href="#SYNOPSIS">SYNOPSIS</a></li>
+  <li><a href="#DESCRIPTION">DESCRIPTION</a></li>
+  <li><a href="#METHODS">METHODS</a>
+    <ul>
+      <li><a href="#Clock">Clock</a></li>
+      <li><a href="#config">config</a></li>
+    </ul>
+  </li>
+  <li><a href="#TAGS">TAGS</a></li>
+  <li><a href="#BUGS">BUGS</a></li>
+  <li><a href="#TODO">TODO</a></li>
+  <li><a href="#SEE-ALSO">SEE ALSO</a></li>
+  <li><a href="#AUTHOR">AUTHOR</a></li>
+  <li><a href="#COPYRIGHT-AND-LICENSE">COPYRIGHT AND LICENSE</a></li>
+</ul>
+
+<h1 id="NAME">NAME</h1>
+
+<p>Tk::Clock - Clock widget with analog and digital display</p>
+
+<h1 id="SYNOPSIS">SYNOPSIS</h1>
+
+<pre><code>  use Tk
+  use Tk::Clock;
+
+  $clock = $parent-&gt;Clock (?-option =&gt; &lt;value&gt; ...?);
+
+  $clock-&gt;config (        # These reflect the defaults
+      timeZone    =&gt; &quot;&quot;,
+      useLocale   =&gt; &quot;C&quot;,
+      backDrop    =&gt; &quot;&quot;,
+
+      useAnalog   =&gt; 1,
+      handColor   =&gt; &quot;Green4&quot;,
+      secsColor   =&gt; &quot;Green2&quot;,
+      tickColor   =&gt; &quot;Yellow4&quot;,
+      tickFreq    =&gt; 1,
+      tickDiff    =&gt; 0,
+      useSecHand  =&gt; 1,
+      handCenter  =&gt; 0,
+      anaScale    =&gt; 100,
+      autoScale   =&gt; 0,
+      ana24hour   =&gt; 0,
+      countDown   =&gt; 0,
+      timerValue  =&gt; 0,
+      localOffset =&gt; 0,
+
+      useInfo     =&gt; 0,
+      infoColor   =&gt; &quot;#cfb53b&quot;,
+      infoFormat  =&gt; &quot;HH:MM:SS&quot;,
+      infoFont    =&gt; &quot;fixed 6&quot;,
+
+      useDigital  =&gt; 1,
+      digiAlign   =&gt; &quot;center&quot;,
+      timeFont    =&gt; &quot;fixed 6&quot;,
+      timeColor   =&gt; &quot;Red4&quot;,
+      timeFormat  =&gt; &quot;HH:MM:SS&quot;,
+      dateFont    =&gt; &quot;fixed 6&quot;,
+      dateColor   =&gt; &quot;Blue4&quot;,
+      dateFormat  =&gt; &quot;dd-mm-yy&quot;,
+      );</code></pre>
+
+<h1 id="DESCRIPTION">DESCRIPTION</h1>
+
+<p>This module implements a Canvas-based clock widget for perl-Tk with lots of options to change the appearance.</p>
+
+<p>Both analog and digital clocks are implemented.</p>
+
+<h1 id="METHODS">METHODS</h1>
+
+<h2 id="Clock">Clock</h2>
+
+<p>This is the constructor. It does accept the standard widget options plus those described in <a href="#config">&quot;config&quot;</a>.</p>
+
+<h2 id="config">config</h2>
+
+<p>Below is a description of the options/attributes currently available. Their default value is in between parenthesis.</p>
+
+<dl>
+
+<dt id="useAnalog-1">useAnalog (1)</dt>
+<dd>
+
+</dd>
+<dt id="useInfo-0">useInfo (0)</dt>
+<dd>
+
+</dd>
+<dt id="useDigital-1">useDigital (1)</dt>
+<dd>
+
+<p>Enable the analog clock (<code>useAnalog</code>) and/or the digital clock (<code>useDigital</code>) in the widget. The analog clock will always be displayed above the digital part</p>
+
+<pre><code>  +----------+
+  |    ..    |  \
+  |  . \_ .  |   |_ Analog clock
+  |  .    .  |   |
+  |    ..    |  /
+  | 23:59:59 |  --- Digital time
+  | 31-12-09 |  --- Digital date
+  +----------+</code></pre>
+
+<p>The analog clock displays ticks, hour hand, minutes hand and second hand. The digital part displays two parts, which are configurable. By default these are time and date.</p>
+
+<p>The <code>useInfo</code> enables a text field between the backdrop of the analog clock and its items. You can use this field to display personal data.</p>
+
+</dd>
+<dt id="autoScale-0">autoScale (0)</dt>
+<dd>
+
+<p>When set to a true value, the widget will try to re-scale itself to automatically fit the containing widget.</p>
+
+<pre><code>  $clock-&gt;config (autoScale =&gt; 1);</code></pre>
+
+</dd>
+<dt id="anaScale-100">anaScale (100)</dt>
+<dd>
+
+<p>The analog clock can be enlarged or reduced using anaScale for which the default of 100% is about 72x72 pixels.</p>
+
+<p>When using <code>pack</code> for your geometry management, be sure to pass <code>-expand =&amp;gt; 1, -fill =&amp;gt; &quot;both&quot;</code> if you plan to resize with <code>anaScale</code> or enable/disable either analog or digital after the clock was displayed.</p>
+
+<pre><code>  $clock-&gt;config (anaScale =&gt; 400);</code></pre>
+
+</dd>
+<dt id="ana24hour-0">ana24hour (0)</dt>
+<dd>
+
+<p>The default for the analog clock it the normal 12 hours display, as most clocks are. This option will show a clock where one round of the hour-hand will cover a full day of 24 hours, noon is at the bottom where the 6 will normally display.</p>
+
+<pre><code>  $clock-&gt;config (ana24hour =&gt; 1);</code></pre>
+
+</dd>
+<dt id="useSecHand-1">useSecHand (1)</dt>
+<dd>
+
+<p>This controls weather the seconds-hand is shown.</p>
+
+<pre><code>  $clock-&gt;config (useSecHand =&gt; 0);</code></pre>
+
+</dd>
+<dt id="countDown-0">countDown (0)</dt>
+<dd>
+
+<p>When <code>countDown</code> is set to a true value, the clock will run backwards. This is a slightly experimental feature, it will not count down to a specific point in time, but will simply reverse the rotation, making the analog clock run counterclockwise.</p>
+
+</dd>
+<dt id="timerValue-0">timerValue (0)</dt>
+<dd>
+
+<p>This represents a countdown timer.</p>
+
+<p>When setting <code>timerValue</code> to a number of seconds, the format values <code>Hc</code>, <code>Mc</code>, and <code>Sc</code> will represent the hour, minute and second of the this value. When the time reaches 0, all countdown values are reset to 0.</p>
+
+</dd>
+<dt id="localOffset-0">localOffset (0)</dt>
+<dd>
+
+<p>The value of this attribute represents the local offset for this clock in seconds. Negative is back in time, positive is in the future.</p>
+
+<pre><code>  # Wind back clock 4 days, 5 hours, 6 minutes and 7 seconds
+  $clock-&gt;config (localOffset =&gt; -363967);</code></pre>
+
+</dd>
+<dt id="handColor-Green4">handColor (&quot;Green4&quot;)</dt>
+<dd>
+
+</dd>
+<dt id="secsColor-Green2">secsColor (&quot;Green2&quot;)</dt>
+<dd>
+
+<p>Set the color of the hands of the analog clock. <code>handColor</code> controls the color for both the hour-hand and the minute-hand. <code>secsColor</code> controls the color for the seconds-hand.</p>
+
+<pre><code>  $clock-&gt;config (
+      handColor =&gt; &quot;#7F0000&quot;,
+      secsColor =&gt; &quot;OrangeRed&quot;,
+      );</code></pre>
+
+</dd>
+<dt id="handCenter-0">handCenter (0)</dt>
+<dd>
+
+<p>If set to a true value, will display a circular extension in the center of the analog clock that extends the hands as if they have a wider area at their turning point, like many station-type clocks (at least in the Netherlands) have.</p>
+
+<pre><code>  $clock-&gt;config (handCenter =&gt; 1);</code></pre>
+
+</dd>
+<dt id="tickColor-Yellow4">tickColor (&quot;Yellow4&quot;)</dt>
+<dd>
+
+<p>Controls the color of the ticks in the analog clock.</p>
+
+<pre><code>  $clock-&gt;config (tickColor =&gt; &quot;White&quot;);</code></pre>
+
+</dd>
+<dt id="tickFreq-1">tickFreq (1)</dt>
+<dd>
+
+</dd>
+<dt id="tickDiff-0">tickDiff (0)</dt>
+<dd>
+
+<p><code>tickFreq</code> controls how many ticks are shown in the analog clock.</p>
+
+<p>Meaningful values for <code>tickFreq</code> are 1, 5 and 15 showing all ticks, tick every 5 minutes or the four main ticks only, though any positive integer will do (put a tick on any <code>tickFreq</code> minute).</p>
+
+<p>When setting tickDiff to a true value, the major ticks will use a thicker line than the minor ticks.</p>
+
+<pre><code>  $clock-&gt;config (
+      tickFreq =&gt; 5,
+      tickDiff =&gt; 1,
+      );</code></pre>
+
+</dd>
+<dt id="timeZone">timeZone (&quot;&quot;)</dt>
+<dd>
+
+<p>Set the timezone for the widget. The format should be the format recognized by the system. If unset, the local timezone is used.</p>
+
+<pre><code>  $clock-&gt;config (timeZone =&gt; &quot;Europe/Amsterdam&quot;);
+  $clock-&gt;config (timeZone =&gt; &quot;MET-1METDST&quot;);</code></pre>
+
+</dd>
+<dt id="useLocale-C">useLocale (&quot;C&quot;)</dt>
+<dd>
+
+<p>Use this locale for the text shown in month formats <code>mmm</code> and <code>mmmm</code> and in day formats <code>ddd</code> and <code>dddd</code>.</p>
+
+<pre><code>  $clock-&gt;config (useLocale =&gt; $ENV{LC_TIME} // $ENV{LC_ALL}
+                            // $ENV{LANG}    // &quot;nl_NL.utf8&quot;);</code></pre>
+
+<p>See <a href="http://docs.moodle.org/dev/Table_of_locales">http://docs.moodle.org/dev/Table_of_locales</a> for a table of locales and the Windows equivalents. Windows might not have a UTF8 version available of the required locale.</p>
+
+</dd>
+<dt id="timeFont-fixed-6">timeFont (&quot;fixed 6&quot;)</dt>
+<dd>
+
+<p>Controls the font to be used for the top line in the digital clock. Will accept all fonts that are supported in your version of perl/Tk. This includes both True Type and X11 notation.</p>
+
+<pre><code>  $clock-&gt;config (timeFont =&gt; &quot;{Liberation Mono} 11&quot;);</code></pre>
+
+</dd>
+<dt id="timeColor-Red4">timeColor (&quot;Red4&quot;)</dt>
+<dd>
+
+<p>Controls the color of the first line (time) of the digital clock.</p>
+
+<pre><code>  $clock-&gt;config (timeColor =&gt; &quot;#00ff00&quot;);</code></pre>
+
+</dd>
+<dt id="timeFormat-HH:MM:SS">timeFormat (&quot;HH:MM:SS&quot;)</dt>
+<dd>
+
+<p>Defines the format of the first line of the digital clock. By default it will display the time in a 24-hour notation.</p>
+
+<p>Legal <code>timeFormat</code> characters are <code>H</code> and <code>HH</code> for 24-hour, <code>h</code> and <code>hh</code> for AM/PM hour, <code>M</code> and <code>MM</code> for minutes, <code>S</code> and <code>SS</code> for seconds, <code>Hc</code> for countdown/timer hour, <code>Mc</code> for countdown/timer minutes, <code>Sc</code> for countdown/timer seconds, <code>A</code> for AM/PM indicator, <code>d</code> and <code>dd</code> for day-of-the month, <code>ddd</code> and <code>dddd</code> for short and long weekday, <code>m</code>, <code>mm</code>, <code>mmm</code> and <code>mmmm</code> for month, <code>y</code> and <code>yy</code> for year, <code>w</code> and <code>ww</code> for week-number and any separators <code>:</code>, <code>-</code>, <code>/</code> or <code>space</code>.</p>
+
+<pre><code>  $clock-&gt;config (timeFormat =&gt; &quot;hh:MM A&quot;);</code></pre>
+
+<p>The text shown in the formats <code>ddd</code>, <code>dddd</code>, <code>mmm</code>, and <code>mmmm</code> might be influenced by the setting of <code>useLocale</code>. The fallback is locale &quot;C&quot;.</p>
+
+</dd>
+<dt id="dateFont-fixed-6">dateFont (&quot;fixed 6&quot;)</dt>
+<dd>
+
+<p>Controls the font to be used for the bottom line in the digital clock. Will accept all fonts that are supported in your version of perl/Tk. This includes both True Type and X11 notation.</p>
+
+<pre><code>  $clock-&gt;config (dateFont =&gt; &quot;-misc-fixed-*-normal--15-*-c-iso8859-1&quot;);</code></pre>
+
+</dd>
+<dt id="dateColor-Blue4">dateColor (&quot;Blue4&quot;)</dt>
+<dd>
+
+<p>Controls the color of the second line (date) of the digital clock.</p>
+
+<pre><code>  $clock-&gt;config (dateColor =&gt; &quot;Navy&quot;);</code></pre>
+
+</dd>
+<dt id="dateFormat-dd-mm-yy">dateFormat (&quot;dd-mm-yy&quot;)</dt>
+<dd>
+
+<p>Defines the format of the second line of the digital clock. By default it will display the date in three groups of two digits representing the day of the month, the month, and the last two digits of the year, separated by dashes.</p>
+
+<pre><code>  $clock-&gt;config (dateFormat =&gt; &quot;ww dd-mm&quot;);</code></pre>
+
+<p>The supported format is the same as for <code>timeFormat</code>.</p>
+
+</dd>
+<dt id="infoFont-fixed-6">infoFont (&quot;fixed 6&quot;)</dt>
+<dd>
+
+<p>Controls the font to be used for the info label in the analog clock. Will accept all fonts that are supported in your version of perl/Tk. This includes both True Type and X11 notation.</p>
+
+<pre><code>  $clock-&gt;config (infoFont =&gt; &quot;{DejaVu Sans Mono} 8&quot;);</code></pre>
+
+</dd>
+<dt id="infoColor-cfb53b">infoColor (&quot;#cfb53b&quot;)</dt>
+<dd>
+
+<p>Controls the color of the info label of the analog clock (default is a shade of Gold).</p>
+
+<pre><code>  $clock-&gt;config (infoColor =&gt; &quot;Yellow&quot;);</code></pre>
+
+</dd>
+<dt id="infoFormat-HH:MM:SS">infoFormat (&quot;HH:MM:SS&quot;)</dt>
+<dd>
+
+<p>Defines the format of the label inside the analog clock. By default will not be displayed. Just as <code>timeFormat</code> and <code>dateFormat</code> the content is updated every second if enabled.</p>
+
+<pre><code>  $clock-&gt;config (infoFormat =&gt; &quot;BREITLING&quot;);</code></pre>
+
+<p>The supported format is the same as for <code>timeFormat</code>.</p>
+
+</dd>
+<dt id="digiAlign-center">digiAlign (&quot;center&quot;)</dt>
+<dd>
+
+<p>Controls the placement of the text in the digital clock. The only legal values for <code>digiAlign</code> are &quot;left&quot;, &quot;center&quot;, and &quot;right&quot;. Any other value will be interpreted as the default &quot;center&quot;.</p>
+
+<pre><code>  $clock-&gt;config (digiAlign =&gt; &quot;right&quot;);</code></pre>
+
+</dd>
+<dt id="backDrop">backDrop (&quot;&quot;)</dt>
+<dd>
+
+<p>By default the background of the clock is controlled by the <code>-background</code> attribute to the constructor, which may default to the default background used in the perl/Tk script.</p>
+
+<p>The <code>backDrop</code> attribute accepts any valid Tk::Photo object, and it will show (part of) the image as a backdrop of the clock</p>
+
+<pre><code>  use Tk;
+  use Tk::Clock;
+  use Tk::Photo;
+  use Tk::PNG;
+
+  my $mainw = MainWindow-&gt;new;
+  my $backd = $mainw-&gt;Photo (
+      -file    =&gt; &quot;image.png&quot;,
+      );
+  my $clock = $mainw-&gt;Clock (
+      -relief  =&gt; &quot;flat&quot;,
+      )-&gt;pack (-expand =&gt; 1, -fill =&gt; &quot;both&quot;);
+  $clock-&gt;config (
+      backDrop =&gt; $backd,
+      );
+  MainLoop;</code></pre>
+
+</dd>
+</dl>
+
+<p>The <code>new ()</code> constructor will also accept options valid for Canvas widgets, like <code>-background</code> and <code>-relief</code>.</p>
+
+<h1 id="TAGS">TAGS</h1>
+
+<p>As all of the clock is part of a Canvas, the items cannot be addressed as Subwidgets. You can however alter presentation afterwards using the tags:</p>
+
+<pre><code> my $clock = $mw-&gt;Clock-&gt;pack;
+ $clock-&gt;itemconfigure (&quot;date&quot;, -fill =&gt; &quot;Red&quot;);</code></pre>
+
+<p>Currently defined tags are <code>date</code>, <code>hour</code>, <code>info</code>, <code>min</code>, <code>sec</code>, <code>tick</code>, and <code>time</code>.</p>
+
+<h1 id="BUGS">BUGS</h1>
+
+<p>If the system load&#39;s too high, the clock might skip some seconds.</p>
+
+<p>There&#39;s no check if either format will fit in the given space.</p>
+
+<h1 id="TODO">TODO</h1>
+
+<p>* Full support for multi-line date- and time-formats with auto-resize. * Countdown clock API, incl action when done. * Better docs for the attributes</p>
+
+<h1 id="SEE-ALSO">SEE ALSO</h1>
+
+<p>Tk(3), Tk::Canvas(3), Tk::Widget(3), Tk::Derived(3)</p>
+
+<h1 id="AUTHOR">AUTHOR</h1>
+
+<p>H.Merijn Brand &lt;h.m.brand@xs4all.nl&gt;</p>
+
+<p>Thanks to Larry Wall for inventing perl. Thanks to Nick Ing-Simmons for providing perlTk. Thanks to Achim Bohnet for introducing me to OO (and converting the basics of my clock.pl to Tk::Clock.pm). Thanks to Sriram Srinivasan for understanding OO though his Panther book. Thanks to all CPAN providers for support of different modules to learn from. Thanks to all who have given me feedback and weird ideas.</p>
+
+<h1 id="COPYRIGHT-AND-LICENSE">COPYRIGHT AND LICENSE</h1>
+
+<p>Copyright (C) 1999-2020 H.Merijn Brand</p>
+
+<p>This library is free software; you can redistribute it and/or modify it under the same terms as Perl itself.</p>
+
+
+</body>
+
+</html>
+
+
