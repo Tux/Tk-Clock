@@ -58,15 +58,15 @@ requires:
     Encode:              0
     POSIX:               0
 recommends:     
-    Tk:                  804.034
-    Encode:              3.01
+    Tk:                  804.035
+    Encode:              3.05
 configure_requires:
     ExtUtils::MakeMaker: 0
 test_requires:
     Test::More:          0.90
     Test::NoWarnings:    0
 test_recommends:
-    Test::More:          1.302168
+    Test::More:          1.302174
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          https://github.com/Tux/Tk-Clock
