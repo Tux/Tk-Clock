@@ -3,7 +3,7 @@
 \.whitesource
 blib/
 cover_db/
-Makefile
+Makefile$
 MANIFEST.SKIP
 MYMETA.json
 MYMETA.yml
@@ -14,7 +14,7 @@ xt/
 ^doc/
 \.releaserc
 \.aspell.local.pws
-\.tar\.gz
-\.tgz
-\.tbz
-\.tmp
+\.tar\.gz$
+\.tgz$
+\.tbz$
+\.tmp$
