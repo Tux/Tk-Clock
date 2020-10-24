@@ -70,6 +70,7 @@ test_recommends:
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          https://github.com/Tux/Tk-Clock
+    bugtracker:          https://github.com/Tux/Tk-Clock/issues
 meta-spec:
     version:             1.4
     url:                 http://module-build.sourceforge.net/META-spec-v1.4.html
