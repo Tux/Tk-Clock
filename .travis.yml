@@ -21,7 +21,7 @@ env:
     - AUTOMATED_TESTING=1
     - TK_TEST_LENGTH=120
 before_install:
- - sudo apt-get update -qq
+ - sudo apt-get update  -qq
  - sudo apt-get install -qq xvfb
  - Xvfb :123 &
  - export DISPLAY=:123
