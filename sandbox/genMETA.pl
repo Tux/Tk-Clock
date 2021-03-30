@@ -58,7 +58,7 @@ requires:
     Encode:              0
     POSIX:               0
 recommends:     
-    Tk:                  804.035
+    Tk:                  804.036
     Encode:              3.08
 configure_requires:
     ExtUtils::MakeMaker: 0
