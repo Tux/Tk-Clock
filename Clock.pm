@@ -800,7 +800,7 @@ Tk::Clock - Clock widget with analog and digital display
 
 =head1 SYNOPSIS
 
-  use Tk
+  use Tk;
   use Tk::Clock;
 
   $clock = $parent->Clock (?-option => <value> ...?);
