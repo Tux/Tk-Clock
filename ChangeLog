@@ -1,5 +1,6 @@
-0.45	- 01 May 2023, H.Merijn Brand
+0.45	- 12 Oct 2023, H.Merijn Brand
     * Refine requirements based on CVE's
+    * Work around groff-1.24
 
 0.44	- 06 Jan 2023, H.Merijn Brand
     * It's 2023

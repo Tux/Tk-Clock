@@ -101,8 +101,8 @@ sub postamble {
 	'	pod2html      < $? 2>&1 | grep -v "^Cannot find" > $@',
 	'doc/Clock.3:		Clock.pm',
 	'	pod2man       < $? > $@',
-	'doc/Clock.man:	doc/Clock.3',
-	'	nroff -mandoc < $? > $@',
+	'doc/Clock.man:		doc/Clock.3',
+	'	nroff2man     < $? > $@',
 	'',
 	$min_vsn;
     } # postamble
