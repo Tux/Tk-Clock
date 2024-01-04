@@ -59,7 +59,7 @@ requires:
     POSIX:               0
 recommends:     
     Tk:                  804.036
-    Encode:              3.19
+    Encode:              3.20
 configure_requires:
     ExtUtils::MakeMaker: 0
 configure_recommends:
@@ -70,7 +70,7 @@ test_requires:
     Test::More:          0.90
     Test::NoWarnings:    0
 test_recommends:
-    Test::More:          1.302195
+    Test::More:          1.302198
 resources:
     license:             http://dev.perl.org/licenses/
     repository:          https://github.com/Tux/Tk-Clock
