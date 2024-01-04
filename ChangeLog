@@ -2,6 +2,7 @@
     * Refine requirements based on CVE's
     * Work around groff-1.24
     * It's 2024
+    * Missing ; in doc example
 
 0.44	- 06 Jan 2023, H.Merijn Brand
     * It's 2023
