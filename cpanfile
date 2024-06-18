@@ -6,7 +6,7 @@ requires   "Tk::Canvas";
 requires   "Tk::Derived";
 requires   "Tk::Widget";
 
-recommends "Encode"                   => "3.20";
+recommends "Encode"                   => "3.21";
 recommends "Tk"                       => "804.036";
 
 on "configure" => sub {
@@ -21,5 +21,5 @@ on "test" => sub {
     requires   "Test::More"               => "0.90";
     requires   "Test::NoWarnings";
 
-    recommends "Test::More"               => "1.302198";
+    recommends "Test::More"               => "1.302199";
     };
