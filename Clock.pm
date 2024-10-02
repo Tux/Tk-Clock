@@ -50,6 +50,12 @@ my %def_config = (
     infoFormat	=> "HH:MM:SS",
     infoFont	=> "fixed 6",
 
+    useText	=> 0,
+
+    textColor	=> "#c4c4c4",
+    textFormat	=> " ",
+    textFont	=> "fixed 6",
+
     useDigital	=> 1,
 
     digiAlign	=> "center",
@@ -117,6 +123,7 @@ sub _booleans {
 	useAnalog
 	useDigital
 	useInfo
+	useText
 	useSecHand
 	);
     } # _booleans
@@ -350,6 +357,18 @@ sub _createAnalog {
 	    -text   => $data->{infoFormat},
 	    -tags   => "info");
 	}
+    if ($data->{useText}) {
+	my $tf = $data->{textFormat};
+	my $text = ref $tf eq "CODE"   ? $tf->(localtime)
+	         : ref $tf eq "SCALAR" ? $$tf : $tf;
+	$clock->createText ($h, int (1.5 * $h),
+	    -anchor => "n",
+	    -width  => int (1.2 * $h),
+	    -font   => $data->{textFont},
+	    -fill   => $data->{textColor},
+	    -text   => $text,
+	    -tags   => "text");
+	}
 
     my $f = $data->{tickFreq} * 2;
     foreach my $dtick (0 .. 119) {
@@ -420,7 +439,7 @@ sub _createAnalog {
 sub _destroyAnalog {
     my $clock = shift;
 
-    $clock->delete ($_) for qw( back info tick hour min sec );
+    $clock->delete ($_) for qw( back text info tick hour min sec );
     } # _destroyAnalog
 
 sub Populate {
@@ -465,6 +484,7 @@ my %attr_weight = (
     digiAlign	=> 99985,
     useAnalog	=> 99990,
     useInfo	=> 99991,
+    useText	=> 99991,
     tickFreq	=> 99992,
     anaScale	=> 99995,
     useLocale	=>     1,
@@ -538,10 +558,17 @@ sub config {
 	elsif ($attr eq "infoFont") {
 	    $clock->itemconfigure ("info", -font => $data->{infoFont});
 	    }
+	elsif ($attr eq "textColor") {
+	    $clock->itemconfigure ("text", -fill => $data->{textColor});
+	    }
+	elsif ($attr eq "textFont") {
+	    $clock->itemconfigure ("text", -font => $data->{textFont});
+	    }
 	elsif ($attr eq "useLocale") {
 	    $locale{$data->{useLocale}} or _newLocale ($data->{useLocale});
 	    }
-	elsif ($attr eq "dateFormat" || $attr eq "timeFormat" || $attr eq "infoFormat") {
+	elsif ($attr eq "dateFormat" || $attr eq "timeFormat" ||
+	       $attr eq "infoFormat" || $attr eq "textFormat") {
 	    my %fmt = (
 		"S"	=> '%d',	# 45
 		"SS"	=> '%02d',	# 45
@@ -686,6 +713,15 @@ sub config {
 		}
 	    $clock->after (5, ["_run" => $clock]);
 	    }
+	elsif ($attr eq "useText") {
+	    if ($old ^ $data->{useText} && $data->{useAnalog}) {
+		$clock->_destroyAnalog;
+		$clock->_destroyDigital;
+		$clock->_createAnalog;
+		$data->{useDigital} and $clock->_createDigital;
+		}
+	    $clock->after (5, ["_run" => $clock]);
+	    }
 	elsif ($attr eq "useDigital") {
 	    if    ($old == 1 && !$data->{useDigital}) {
 		$clock->_destroyDigital;
@@ -782,6 +818,12 @@ sub _run {
 	$data->{fmti} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
 	$data->{useInfo} and
 	    $clock->itemconfigure ("info", -text => $data->{fmti}->(@t));
+	if ($data->{useText}) {
+	    my $tf = $data->{textFormat};
+	    my $text = ref $tf eq "CODE"   ? $tf->(localtime)
+		     : ref $tf eq "SCALAR" ? $$tf : $tf;
+	    $clock->itemconfigure ("text", -text => $text);
+	    }
 	}
     $data->{fmtt} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
     $data->{useDigital} and
@@ -829,6 +871,10 @@ Tk::Clock - Clock widget with analog and digital display
       infoColor   => "#cfb53b",
       infoFormat  => "HH:MM:SS",
       infoFont    => "fixed 6",
+      useText     => 0,
+      textColor   => "#c4c4c4",
+      textFormat  => "HH:MM:SS",
+      textFont    => "fixed 6",
 
       useDigital  => 1,
       digiAlign   => "center",
@@ -865,18 +911,20 @@ default value is in between parenthesis.
 
 =item useInfo (0)
 
+=item useText (0)
+
 =item useDigital (1)
 
 Enable the analog clock (C<useAnalog>) and/or the digital clock (C<useDigital>)
 in the widget. The analog clock will always be displayed above the digital part
 
-  +----------+
-  |    ..    |  \
-  |  . \_ .  |   |_ Analog clock
-  |  .    .  |   |
-  |    ..    |  /
-  | 23:59:59 |  --- Digital time
-  | 31-12-09 |  --- Digital date
+  +----------+                                   ......
+  |    ..    |  \                              . \ |    .
+  |  . \_ .  |   |_ Analog clock              .   \|     .
+  |  .    .  |   |                            .    *     .
+  |    ..    |  /                             .   Info   .
+  | 23:59:59 |  --- Digital time               .  Text  .
+  | 31-12-09 |  --- Digital date                 ......
   +----------+
 
 The analog clock displays ticks, hour hand, minutes hand and second hand.
@@ -885,6 +933,12 @@ these are time and date.
 
 The C<useInfo> enables a text field between the backdrop of the analog
 clock and its items. You can use this field to display personal data.
+
+The C<useText> is like second line of C<useInfo>, but with support for
+callbacks or variable binding.
+
+  $clock->configure (useText => 1, textFormat => \$foo);
+  $clock->configure (useText => 1, textFormat => sub { int rand 42 });
 
 =item autoScale (0)
 

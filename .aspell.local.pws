@@ -1,4 +1,4 @@
-personal_ws-1.1 en 41
+personal_ws-1.1 en 45
 Achim
 anaScale
 API
@@ -26,6 +26,9 @@ secsColor
 Srinivasan
 Sriram
 Subwidgets
+textColor
+textFont
+textFormat
 tickColor
 tickDiff
 tickFreq
@@ -39,4 +42,5 @@ useDigital
 useInfo
 useLocale
 useSecHand
+useText
 yy

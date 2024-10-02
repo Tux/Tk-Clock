@@ -33,6 +33,10 @@ Tk::Clock - Clock widget with analog and digital display
         infoColor   => "#cfb53b",
         infoFormat  => "HH:MM:SS",
         infoFont    => "fixed 6",
+        useText     => 0,
+        textColor   => "#c4c4c4",
+        textFormat  => "HH:MM:SS",
+        textFont    => "fixed 6",
 
         useDigital  => 1,
         digiAlign   => "center",
@@ -65,18 +69,19 @@ default value is in between parenthesis.
 
 - useAnalog (1)
 - useInfo (0)
+- useText (0)
 - useDigital (1)
 
     Enable the analog clock (`useAnalog`) and/or the digital clock (`useDigital`)
     in the widget. The analog clock will always be displayed above the digital part
 
-        +----------+
-        |    ..    |  \
-        |  . \_ .  |   |_ Analog clock
-        |  .    .  |   |
-        |    ..    |  /
-        | 23:59:59 |  --- Digital time
-        | 31-12-09 |  --- Digital date
+        +----------+                                   ......
+        |    ..    |  \                              . \ |    .
+        |  . \_ .  |   |_ Analog clock              .   \|     .
+        |  .    .  |   |                            .    *     .
+        |    ..    |  /                             .   Info   .
+        | 23:59:59 |  --- Digital time               .  Text  .
+        | 31-12-09 |  --- Digital date                 ......
         +----------+
 
     The analog clock displays ticks, hour hand, minutes hand and second hand.
@@ -85,6 +90,12 @@ default value is in between parenthesis.
 
     The `useInfo` enables a text field between the backdrop of the analog
     clock and its items. You can use this field to display personal data.
+
+    The `useText` is like second line of `useInfo`, but with support for
+    callbacks or variable binding.
+
+        $clock->configure (useText => 1, textFormat => \$foo);
+        $clock->configure (useText => 1, textFormat => sub { int rand 42 });
 
 - autoScale (0)
 

@@ -44,6 +44,9 @@ like ($c1->config ((
     handColor  => "Red",
     timeZone   => $ENV{TZ} || undef,
     dateFormat => "Local",
+    useText    => 1,
+    textFormat => "\x{03a9}",
+    textColor  => "Blue",
     )), qr(^Tk::Clock=HASH), "config");
 ok ($c1->grid (-column => 0, -row => 0, -sticky => "news"), "grid");
 
@@ -56,6 +59,8 @@ like ($c2->config (
     handColor  => "Orange",
     timeZone   => "GMT",
     dateFormat => "London (GMT)",
+    useText    => 1,
+    textFormat => "\x{23f0}",
     ), qr(^Tk::Clock=HASH), "config");
 ok ($c2->grid (-column => 0, -row => 1, -sticky => "news", -padx => 20), "grid");
 

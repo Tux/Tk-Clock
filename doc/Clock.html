@@ -64,6 +64,10 @@ $clock-&gt;config (        # These reflect the defaults
     infoColor   =&gt; &quot;#cfb53b&quot;,
     infoFormat  =&gt; &quot;HH:MM:SS&quot;,
     infoFont    =&gt; &quot;fixed 6&quot;,
+    useText     =&gt; 0,
+    textColor   =&gt; &quot;#c4c4c4&quot;,
+    textFormat  =&gt; &quot;HH:MM:SS&quot;,
+    textFont    =&gt; &quot;fixed 6&quot;,
 
     useDigital  =&gt; 1,
     digiAlign   =&gt; &quot;center&quot;,
@@ -101,23 +105,32 @@ $clock-&gt;config (        # These reflect the defaults
 <dd>
 
 </dd>
+<dt id="useText-0">useText (0)</dt>
+<dd>
+
+</dd>
 <dt id="useDigital-1">useDigital (1)</dt>
 <dd>
 
 <p>Enable the analog clock (<code>useAnalog</code>) and/or the digital clock (<code>useDigital</code>) in the widget. The analog clock will always be displayed above the digital part</p>
 
-<pre><code>+----------+
-|    ..    |  \
-|  . \_ .  |   |_ Analog clock
-|  .    .  |   |
-|    ..    |  /
-| 23:59:59 |  --- Digital time
-| 31-12-09 |  --- Digital date
+<pre><code>+----------+                                   ......
+|    ..    |  \                              . \ |    .
+|  . \_ .  |   |_ Analog clock              .   \|     .
+|  .    .  |   |                            .    *     .
+|    ..    |  /                             .   Info   .
+| 23:59:59 |  --- Digital time               .  Text  .
+| 31-12-09 |  --- Digital date                 ......
 +----------+</code></pre>
 
 <p>The analog clock displays ticks, hour hand, minutes hand and second hand. The digital part displays two parts, which are configurable. By default these are time and date.</p>
 
 <p>The <code>useInfo</code> enables a text field between the backdrop of the analog clock and its items. You can use this field to display personal data.</p>
+
+<p>The <code>useText</code> is like second line of <code>useInfo</code>, but with support for callbacks or variable binding.</p>
+
+<pre><code>$clock-&gt;configure (useText =&gt; 1, textFormat =&gt; \$foo);
+$clock-&gt;configure (useText =&gt; 1, textFormat =&gt; sub { int rand 42 });</code></pre>
 
 </dd>
 <dt id="autoScale-0">autoScale (0)</dt>
