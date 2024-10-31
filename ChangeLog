@@ -1,10 +1,11 @@
-0.45	- 02 Oct 2024, H.Merijn Brand
+0.45	- 31 Oct 2024, H.Merijn Brand
     * Refine requirements based on CVE's
     * Work around groff-1.24
     * It's 2024
     * Missing ; in doc example
     * Tested on perl-5.40
     * Added textInfo / useText
+    * Added time2* with own timeZone
 
 0.44	- 06 Jan 2023, H.Merijn Brand
     * It's 2023

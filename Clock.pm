@@ -56,6 +56,11 @@ my %def_config = (
     textFormat	=> " ",
     textFont	=> "fixed 6",
 
+    time2Font	=> "fixed 6",
+    time2Color	=> "Gray30",
+    time2Format	=> "HH:MM:SS",
+    time2TZ	=> undef,
+
     useDigital	=> 1,
 
     digiAlign	=> "center",
@@ -75,6 +80,9 @@ my %def_config = (
 	sprintf "%02d:%02d:%02d", @_[2,1,0];
 	},
     fmti	=> sub {
+	sprintf "%02d:%02d:%02d", @_[2,1,0];
+	},
+    fmt2	=> sub {
 	sprintf "%02d:%02d:%02d", @_[2,1,0];
 	},
 
@@ -124,6 +132,7 @@ sub _booleans {
 	useDigital
 	useInfo
 	useText
+	time2TZ
 	useSecHand
 	);
     } # _booleans
@@ -334,6 +343,27 @@ sub _where {
     ($h - $x / 4, $h + $y / 4, $h + $x, $h - $y);
     } # _where
 
+sub _timeText {
+    my ($data, $tag) = @_;
+    my $tf = $data->{"${tag}Format"};
+    local $ENV{TZ} = $data->{"${tag}TZ"} || $data->{timeZone} || $ENV{TZ};
+    my $text = ref $tf eq "CODE"   ? $tf->(localtime)
+	     : ref $tf eq "SCALAR" ? $$tf : $tf;
+    return $text;
+    } # _timeText
+
+sub _createTimeText {
+    my ($clock, $data, $tag, $h, $f) = @_;
+	my $text = _timeText ($data, $tag);
+	$clock->createText ($h, int ($f * $h),
+	    -anchor => "n",
+	    -width  => int (1.2 * $h),
+	    -font   => $data->{"${tag}Font"},
+	    -fill   => $data->{"${tag}Color"},
+	    -text   => $text,
+	    -tags   => $tag);
+    } # _createTimeText
+
 sub _createAnalog {
     my $clock = shift;
 
@@ -358,16 +388,16 @@ sub _createAnalog {
 	    -tags   => "info");
 	}
     if ($data->{useText}) {
-	my $tf = $data->{textFormat};
-	my $text = ref $tf eq "CODE"   ? $tf->(localtime)
-	         : ref $tf eq "SCALAR" ? $$tf : $tf;
-	$clock->createText ($h, int (1.5 * $h),
-	    -anchor => "n",
-	    -width  => int (1.2 * $h),
-	    -font   => $data->{textFont},
-	    -fill   => $data->{textColor},
-	    -text   => $text,
-	    -tags   => "text");
+	_createTimeText ($clock, $data, "text",  $h, 1.5);
+	}
+    if (defined $data->{time2TZ}) {
+	$data->{time2TZ} ||= "UTC";
+	if ($data->{time2Format}) {
+	    unless (ref $data->{time2Format}) {
+		ref $data->{fmt2} and $data->{time2Format} = $data->{fmt2};
+		}
+	    _createTimeText ($clock, $data, "time2", $h, 0.7);
+	    }
 	}
 
     my $f = $data->{tickFreq} * 2;
@@ -439,7 +469,7 @@ sub _createAnalog {
 sub _destroyAnalog {
     my $clock = shift;
 
-    $clock->delete ($_) for qw( back text info tick hour min sec );
+    $clock->delete ($_) for qw( back text info time2 tick hour min sec );
     } # _destroyAnalog
 
 sub Populate {
@@ -527,7 +557,7 @@ sub config {
 	    keys %$conf) {
 	(my $attr = $conf_spec) =~ s/^-//;
 	$attr =~ m/^_/ and next; # Internal use only!
-	defined $def_config{$attr} && defined $data->{$attr} or next;
+	exists $def_config{$attr} && exists $data->{$attr} or next;
 	my $old = $data->{$attr};
 	$data->{$attr} = $conf->{$conf_spec};
 	if    ($attr eq "tickColor") {
@@ -552,6 +582,12 @@ sub config {
 	elsif ($attr eq "timeFont") {
 	    $clock->itemconfigure ("time", -font => $data->{timeFont});
 	    }
+	elsif ($attr eq "time2Color") {
+	    $clock->itemconfigure ("time2",-fill => $data->{time2Color});
+	    }
+	elsif ($attr eq "time2Font") {
+	    $clock->itemconfigure ("time2",-font => $data->{time2Font});
+	    }
 	elsif ($attr eq "infoColor") {
 	    $clock->itemconfigure ("info", -fill => $data->{infoColor});
 	    }
@@ -567,7 +603,7 @@ sub config {
 	elsif ($attr eq "useLocale") {
 	    $locale{$data->{useLocale}} or _newLocale ($data->{useLocale});
 	    }
-	elsif ($attr eq "dateFormat" || $attr eq "timeFormat" ||
+	elsif ($attr eq "dateFormat" || $attr eq "timeFormat" || $attr eq "time2Format" ||
 	       $attr eq "infoFormat" || $attr eq "textFormat") {
 	    my %fmt = (
 		"S"	=> '%d',	# 45
@@ -627,7 +663,7 @@ sub config {
 		    }
 		}
 	    $data->{Clock_h} = -1;	# force update;
-	    $data->{"fmt".substr $attr, 0, 1} = eval join "\n" =>
+	    my $cb = eval join "\n" =>
 		 q[ sub							],
 		 q[ {							],
 		 q[     my ($S,  $M,  $H, $d, $m, $y, $wd, $yd, $dst,	],
@@ -639,6 +675,8 @@ sub config {
 		 q[     $h ||= 12;					],
 		qq[     sprintf qq!$fmt!$args;				],
 		 q[     }						];
+	    my $fmt_tag = $attr =~ m/^time2/ ? "2" : substr $attr, 0, 1;
+	    $data->{"fmt$fmt_tag"} = $cb;
 	    }
 	elsif ($attr eq "timerValue") {
 	    $data->{timerStart} = $data->{timerValue} ? time : undef;
@@ -715,6 +753,15 @@ sub config {
 	    }
 	elsif ($attr eq "useText") {
 	    if ($old ^ $data->{useText} && $data->{useAnalog}) {
+		$clock->_destroyAnalog;
+		$clock->_destroyDigital;
+		$clock->_createAnalog;
+		$data->{useDigital} and $clock->_createDigital;
+		}
+	    $clock->after (5, ["_run" => $clock]);
+	    }
+	elsif ($attr eq "time2TZ") {
+	    if (($old || "\x1") ^ ($data->{time2TZ} || "\x1") && $data->{useAnalog}) {
 		$clock->_destroyAnalog;
 		$clock->_destroyDigital;
 		$clock->_createAnalog;
@@ -816,20 +863,14 @@ sub _run {
 	    $clock->coords ("sec",
 		$clock->_where ($data->{Clock_s}, 34, $data->{_anaSize}));
 	$data->{fmti} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
-	$data->{useInfo} and
-	    $clock->itemconfigure ("info", -text => $data->{fmti}->(@t));
-	if ($data->{useText}) {
-	    my $tf = $data->{textFormat};
-	    my $text = ref $tf eq "CODE"   ? $tf->(localtime)
-		     : ref $tf eq "SCALAR" ? $$tf : $tf;
-	    $clock->itemconfigure ("text", -text => $text);
-	    }
+	$data->{useInfo} and $clock->itemconfigure ("info",  -text => $data->{fmti}->(@t));
+	$data->{useText} and $clock->itemconfigure ("text",  -text => _timeText ($data, "text"));
+	$data->{time2TZ} and $clock->itemconfigure ("time2", -text => _timeText ($data, "time2"));
 	}
     $data->{fmtt} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
-    $data->{useDigital} and
-	$clock->itemconfigure ("time", -text => $data->{fmtt}->(@t));
+    $data->{useDigital}  and $clock->itemconfigure ("time",  -text => $data->{fmtt}->(@t));
 
-    $data->{autoScale} and $clock->_resize_auto;
+    $data->{autoScale}   and $clock->_resize_auto;
     } # _run
 
 1;
@@ -875,6 +916,10 @@ Tk::Clock - Clock widget with analog and digital display
       textColor   => "#c4c4c4",
       textFormat  => "HH:MM:SS",
       textFont    => "fixed 6",
+      time2Font   => "fixed 6",
+      time2Color  => "Red4",
+      time2Format => "HH:MM:SS",
+      time2TZ     => "Europe/Amsterdam",
 
       useDigital  => 1,
       digiAlign   => "center",
@@ -920,7 +965,7 @@ in the widget. The analog clock will always be displayed above the digital part
 
   +----------+                                   ......
   |    ..    |  \                              . \ |    .
-  |  . \_ .  |   |_ Analog clock              .   \|     .
+  |  . \_ .  |   |_ Analog clock              .   Tim2   .
   |  .    .  |   |                            .    *     .
   |    ..    |  /                             .   Info   .
   | 23:59:59 |  --- Digital time               .  Text  .
@@ -1096,6 +1141,36 @@ C</> or C<space>.
 
 The text shown in the formats C<ddd>, C<dddd>, C<mmm>, and C<mmmm> might be
 influenced by the setting of C<useLocale>. The fallback is locale "C".
+
+=item time2Font ("fixed 6")
+
+Controls the font to be used for the alternate time in the analog clock. Will
+accept all fonts that are supported in your version of perl/Tk. This includes
+both True Type and X11 notation.
+
+  $clock->config (time2Font => "{Liberation Mono} 11");
+
+=item time2Color ("Gray30")
+
+Controls the color of the alternate time line of the analog clock.
+
+  $clock->config (time2Color => "#00ff00");
+
+=item time2Format ("HH:MM:SS")
+
+Defines the format of the alternate time line of the analog clock. By
+default it will display the time in a 24-hour notation.
+
+The supported format is the same as for C<timeFormat>.
+
+=item time2TZ ("Europe/Amsterdam")
+
+Define the time zone for the alternate time in the analog clock. When
+undefined, it disables the display of an alternate time. Empty defaults to
+"UTC".
+
+ $clock->config (time2TZ => undef);
+ $clock->config (time2TZ => "UTC");
 
 =item dateFont ("fixed 6")
 
