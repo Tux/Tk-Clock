@@ -58,7 +58,7 @@
 .\" ========================================================================
 .\"
 .IX Title "STDIN 1"
-.TH STDIN 1 2024-10-02 "perl v5.40.0" "User Contributed Perl Documentation"
+.TH STDIN 1 2024-10-31 "perl v5.40.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -101,6 +101,10 @@ Tk::Clock \- Clock widget with analog and digital display
 \&      textColor   => "#c4c4c4",
 \&      textFormat  => "HH:MM:SS",
 \&      textFont    => "fixed 6",
+\&      time2Font   => "fixed 6",
+\&      time2Color  => "Red4",
+\&      time2Format => "HH:MM:SS",
+\&      time2TZ     => "Europe/Amsterdam",
 \&
 \&      useDigital  => 1,
 \&      digiAlign   => "center",
@@ -144,7 +148,7 @@ in the widget. The analog clock will always be displayed above the digital part
 .Vb 8
 \&  +\-\-\-\-\-\-\-\-\-\-+                                   ......
 \&  |    ..    |  \e                              . \e |    .
-\&  |  . \e_ .  |   |_ Analog clock              .   \e|     .
+\&  |  . \e_ .  |   |_ Analog clock              .   Tim2   .
 \&  |  .    .  |   |                            .    *     .
 \&  |    ..    |  /                             .   Info   .
 \&  | 23:59:59 |  \-\-\- Digital time               .  Text  .
@@ -339,6 +343,38 @@ for year, \f(CW\*(C`w\*(C'\fR and \f(CW\*(C`ww\*(C'\fR for week\-number and any 
 .Sp
 The text shown in the formats \f(CW\*(C`ddd\*(C'\fR, \f(CW\*(C`dddd\*(C'\fR, \f(CW\*(C`mmm\*(C'\fR, and \f(CW\*(C`mmmm\*(C'\fR might be
 influenced by the setting of \f(CW\*(C`useLocale\*(C'\fR. The fallback is locale "C".
+.IP "time2Font (""fixed 6"")" 4
+.IX Item "time2Font (""fixed 6"")"
+Controls the font to be used for the alternate time in the analog clock. Will
+accept all fonts that are supported in your version of perl/Tk. This includes
+both True Type and X11 notation.
+.Sp
+.Vb 1
+\&  $clock\->config (time2Font => "{Liberation Mono} 11");
+.Ve
+.IP "time2Color (""Gray30"")" 4
+.IX Item "time2Color (""Gray30"")"
+Controls the color of the alternate time line of the analog clock.
+.Sp
+.Vb 1
+\&  $clock\->config (time2Color => "#00ff00");
+.Ve
+.IP "time2Format (""HH:MM:SS"")" 4
+.IX Item "time2Format (""HH:MM:SS"")"
+Defines the format of the alternate time line of the analog clock. By
+default it will display the time in a 24\-hour notation.
+.Sp
+The supported format is the same as for \f(CW\*(C`timeFormat\*(C'\fR.
+.IP "time2TZ (""Europe/Amsterdam"")" 4
+.IX Item "time2TZ (""Europe/Amsterdam"")"
+Define the time zone for the alternate time in the analog clock. When
+undefined, it disables the display of an alternate time. Empty defaults to
+"UTC".
+.Sp
+.Vb 2
+\& $clock\->config (time2TZ => undef);
+\& $clock\->config (time2TZ => "UTC");
+.Ve
 .IP "dateFont (""fixed 6"")" 4
 .IX Item "dateFont (""fixed 6"")"
 Controls the font to be used for the bottom line in the digital clock. Will

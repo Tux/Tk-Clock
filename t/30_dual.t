@@ -35,6 +35,10 @@ my %defconfig = (
     dateFont	=> "{fixed} 11",
     dateColor	=> "#cfb53b",
     infoFont	=> "{Helvetica} 11 bold",
+    time2TZ	=> "UTC",
+    time2Color  => "White",
+    time2Font	=> "{fixed} 12",
+#   time2Format	=> "HH:MM:SS",
     );
 
 ok (my $c1 = $m->Clock (%defconfig),			"Clock Local TimeZone");

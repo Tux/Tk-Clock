@@ -58,8 +58,8 @@ my %def_config = (
 
     time2Font	=> "fixed 6",
     time2Color	=> "Gray30",
-    time2Format	=> "HH:MM:SS",
-    time2TZ	=> undef,
+    time2Format	=> "",
+    time2TZ	=> "",
 
     useDigital	=> 1,
 
@@ -132,7 +132,6 @@ sub _booleans {
 	useDigital
 	useInfo
 	useText
-	time2TZ
 	useSecHand
 	);
     } # _booleans
@@ -390,14 +389,16 @@ sub _createAnalog {
     if ($data->{useText}) {
 	_createTimeText ($clock, $data, "text",  $h, 1.5);
 	}
-    if (defined $data->{time2TZ}) {
+    if ($data->{time2TZ}) {
 	$data->{time2TZ} ||= "UTC";
-	if ($data->{time2Format}) {
-	    unless (ref $data->{time2Format}) {
-		ref $data->{fmt2} and $data->{time2Format} = $data->{fmt2};
-		}
-	    _createTimeText ($clock, $data, "time2", $h, 0.7);
+	$data->{time2Format} or $clock->config (time2Format => "HH:MM:SS");
+	unless (ref $data->{time2Format}) {
+	    ref $data->{fmt2} and $data->{time2Format} = $data->{fmt2};
 	    }
+	_createTimeText ($clock, $data, "time2", $h, 0.7);
+	}
+    else {
+	$data->{time2Format} = "";
 	}
 
     my $f = $data->{tickFreq} * 2;
@@ -515,6 +516,7 @@ my %attr_weight = (
     useAnalog	=> 99990,
     useInfo	=> 99991,
     useText	=> 99991,
+    time2TZ	=> 99991,
     tickFreq	=> 99992,
     anaScale	=> 99995,
     useLocale	=>     1,
@@ -761,7 +763,9 @@ sub config {
 	    $clock->after (5, ["_run" => $clock]);
 	    }
 	elsif ($attr eq "time2TZ") {
-	    if (($old || "\x1") ^ ($data->{time2TZ} || "\x1") && $data->{useAnalog}) {
+	    defined $data->{time2TZ} or $data->{time2TZ} = "";
+	    if ($old ^ $data->{time2TZ} && $data->{useAnalog}) {
+		$data->{time2TZ} && !$data->{time2Format} and $clock->config (time2Format => "HH:MM:SS");
 		$clock->_destroyAnalog;
 		$clock->_destroyDigital;
 		$clock->_createAnalog;
@@ -863,9 +867,9 @@ sub _run {
 	    $clock->coords ("sec",
 		$clock->_where ($data->{Clock_s}, 34, $data->{_anaSize}));
 	$data->{fmti} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
-	$data->{useInfo} and $clock->itemconfigure ("info",  -text => $data->{fmti}->(@t));
-	$data->{useText} and $clock->itemconfigure ("text",  -text => _timeText ($data, "text"));
-	$data->{time2TZ} and $clock->itemconfigure ("time2", -text => _timeText ($data, "time2"));
+	$data->{useInfo} ? $clock->itemconfigure ("info",  -text => $data->{fmti}->(@t))        : $clock->delete ("info");
+	$data->{useText} ? $clock->itemconfigure ("text",  -text => _timeText ($data, "text"))  : $clock->delete ("text");
+	$data->{time2TZ} ? $clock->itemconfigure ("time2", -text => _timeText ($data, "time2")) : $clock->delete ("time2");
 	}
     $data->{fmtt} ||= sub { sprintf "%02d:%02d:%02d", @_[2,1,0]; };
     $data->{useDigital}  and $clock->itemconfigure ("time",  -text => $data->{fmtt}->(@t));
@@ -1166,10 +1170,9 @@ The supported format is the same as for C<timeFormat>.
 =item time2TZ ("Europe/Amsterdam")
 
 Define the time zone for the alternate time in the analog clock. When
-undefined, it disables the display of an alternate time. Empty defaults to
-"UTC".
+empty, it disables the display of an alternate time.
 
- $clock->config (time2TZ => undef);
+ $clock->config (time2TZ => "");
  $clock->config (time2TZ => "UTC");
 
 =item dateFont ("fixed 6")

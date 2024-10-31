@@ -68,6 +68,10 @@ $clock-&gt;config (        # These reflect the defaults
     textColor   =&gt; &quot;#c4c4c4&quot;,
     textFormat  =&gt; &quot;HH:MM:SS&quot;,
     textFont    =&gt; &quot;fixed 6&quot;,
+    time2Font   =&gt; &quot;fixed 6&quot;,
+    time2Color  =&gt; &quot;Red4&quot;,
+    time2Format =&gt; &quot;HH:MM:SS&quot;,
+    time2TZ     =&gt; &quot;Europe/Amsterdam&quot;,
 
     useDigital  =&gt; 1,
     digiAlign   =&gt; &quot;center&quot;,
@@ -116,7 +120,7 @@ $clock-&gt;config (        # These reflect the defaults
 
 <pre><code>+----------+                                   ......
 |    ..    |  \                              . \ |    .
-|  . \_ .  |   |_ Analog clock              .   \|     .
+|  . \_ .  |   |_ Analog clock              .   Tim2   .
 |  .    .  |   |                            .    *     .
 |    ..    |  /                             .   Info   .
 | 23:59:59 |  --- Digital time               .  Text  .
@@ -286,6 +290,39 @@ $clock-&gt;config (timeZone =&gt; &quot;MET-1METDST&quot;);</code></pre>
 <pre><code>$clock-&gt;config (timeFormat =&gt; &quot;hh:MM A&quot;);</code></pre>
 
 <p>The text shown in the formats <code>ddd</code>, <code>dddd</code>, <code>mmm</code>, and <code>mmmm</code> might be influenced by the setting of <code>useLocale</code>. The fallback is locale &quot;C&quot;.</p>
+
+</dd>
+<dt id="time2Font-fixed-6">time2Font (&quot;fixed 6&quot;)</dt>
+<dd>
+
+<p>Controls the font to be used for the alternate time in the analog clock. Will accept all fonts that are supported in your version of perl/Tk. This includes both True Type and X11 notation.</p>
+
+<pre><code>$clock-&gt;config (time2Font =&gt; &quot;{Liberation Mono} 11&quot;);</code></pre>
+
+</dd>
+<dt id="time2Color-Gray30">time2Color (&quot;Gray30&quot;)</dt>
+<dd>
+
+<p>Controls the color of the alternate time line of the analog clock.</p>
+
+<pre><code>$clock-&gt;config (time2Color =&gt; &quot;#00ff00&quot;);</code></pre>
+
+</dd>
+<dt id="time2Format-HH:MM:SS">time2Format (&quot;HH:MM:SS&quot;)</dt>
+<dd>
+
+<p>Defines the format of the alternate time line of the analog clock. By default it will display the time in a 24-hour notation.</p>
+
+<p>The supported format is the same as for <code>timeFormat</code>.</p>
+
+</dd>
+<dt id="time2TZ-Europe-Amsterdam">time2TZ (&quot;Europe/Amsterdam&quot;)</dt>
+<dd>
+
+<p>Define the time zone for the alternate time in the analog clock. When undefined, it disables the display of an alternate time. Empty defaults to &quot;UTC&quot;.</p>
+
+<pre><code>$clock-&gt;config (time2TZ =&gt; undef);
+$clock-&gt;config (time2TZ =&gt; &quot;UTC&quot;);</code></pre>
 
 </dd>
 <dt id="dateFont-fixed-6">dateFont (&quot;fixed 6&quot;)</dt>

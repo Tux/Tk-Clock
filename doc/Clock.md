@@ -37,6 +37,10 @@ Tk::Clock - Clock widget with analog and digital display
         textColor   => "#c4c4c4",
         textFormat  => "HH:MM:SS",
         textFont    => "fixed 6",
+        time2Font   => "fixed 6",
+        time2Color  => "Red4",
+        time2Format => "HH:MM:SS",
+        time2TZ     => "Europe/Amsterdam",
 
         useDigital  => 1,
         digiAlign   => "center",
@@ -77,7 +81,7 @@ default value is in between parenthesis.
 
         +----------+                                   ......
         |    ..    |  \                              . \ |    .
-        |  . \_ .  |   |_ Analog clock              .   \|     .
+        |  . \_ .  |   |_ Analog clock              .   Tim2   .
         |  .    .  |   |                            .    *     .
         |    ..    |  /                             .   Info   .
         | 23:59:59 |  --- Digital time               .  Text  .
@@ -251,6 +255,36 @@ default value is in between parenthesis.
 
     The text shown in the formats `ddd`, `dddd`, `mmm`, and `mmmm` might be
     influenced by the setting of `useLocale`. The fallback is locale "C".
+
+- time2Font ("fixed 6")
+
+    Controls the font to be used for the alternate time in the analog clock. Will
+    accept all fonts that are supported in your version of perl/Tk. This includes
+    both True Type and X11 notation.
+
+        $clock->config (time2Font => "{Liberation Mono} 11");
+
+- time2Color ("Gray30")
+
+    Controls the color of the alternate time line of the analog clock.
+
+        $clock->config (time2Color => "#00ff00");
+
+- time2Format ("HH:MM:SS")
+
+    Defines the format of the alternate time line of the analog clock. By
+    default it will display the time in a 24-hour notation.
+
+    The supported format is the same as for `timeFormat`.
+
+- time2TZ ("Europe/Amsterdam")
+
+    Define the time zone for the alternate time in the analog clock. When
+    undefined, it disables the display of an alternate time. Empty defaults to
+    "UTC".
+
+        $clock->config (time2TZ => undef);
+        $clock->config (time2TZ => "UTC");
 
 - dateFont ("fixed 6")
 
