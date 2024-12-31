@@ -1,7 +1,5 @@
 STDIN(1)              User Contributed Perl Documentation             STDIN(1)
 
-
-
 NAME
        Tk::Clock - Clock widget with analog and digital display
 
@@ -386,7 +384,5 @@ COPYRIGHT AND LICENSE
 
        This library is free software; you can redistribute it and/or modify it
        under the same terms as Perl itself.
-
-
 
 perl v5.40.0                      2024-10-31                          STDIN(1)
